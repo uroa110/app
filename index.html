@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOPEYA TRADING - Checklist & Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Kanit', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1); }
+        .input-focus:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .preset-card { transition: all 0.3s ease; }
+        .preset-card:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <div class="gradient-bg text-white py-6 px-4">
+        <div class="max-w-md mx-auto text-center">
+            <h1 class="text-2xl font-bold mb-2">📈 HOPEYA TRADING</h1>
+            <p class="text-blue-100">เช็คลิสต์ & เครื่องคำนวณการเทรด</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="bg-white rounded-xl card-shadow p-4 mb-4">
+            <div class="grid grid-cols-4 gap-2">
+                <button id="checklistTab" class="nav-btn bg-blue-500 text-white py-2 px-2 rounded-lg text-xs font-medium transition-all">
+                    ✅ เช็คลิสต์
+                </button>
+                <button id="calculatorTab" class="nav-btn bg-gray-200 text-gray-700 py-2 px-2 rounded-lg text-xs font-medium transition-all">
+                    🧮 คำนวณ
+                </button>
+                <button id="recordsTab" class="nav-btn bg-gray-200 text-gray-700 py-2 px-2 rounded-lg text-xs font-medium transition-all">
+                    📝 บันทึกผล
+                </button>
+                <button id="statsTab" class="nav-btn bg-gray-200 text-gray-700 py-2 px-2 rounded-lg text-xs font-medium transition-all">
+                    📊 สถิติ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Limit Warning -->
+    <div id="dailyLimitWarning" class="max-w-md mx-auto px-4 mb-4 hidden">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl">
+            <div class="text-center">
+                <p class="font-bold">🚫 เทรดครบแล้ว 5 ไม้</p>
+                <p class="text-sm">วินัยสัสวินัยอยากมีอิสระภาพรึเปล่า!!!</p>
+                <p class="text-xs mt-2">สามารถใช้งานได้อีกครั้งเวลา 06:00 น. วันถัดไป</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-md mx-auto px-4 py-2">
+        <!-- Checklist Page -->
+        <div id="checklistPage">
+            <!-- Preset Management -->
+            <div class="bg-white rounded-xl card-shadow p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800">📋 พรีเซ็ตเช็คลิสต์</h2>
+                    <button id="createPresetBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors">
+                        ➕ สร้างใหม่
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เลือกพรีเซ็ต</label>
+                        <select id="presetSelector" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                            <option value="">-- เลือกพรีเซ็ต --</option>
+                        </select>
+                    </div>
+                    
+                    <div id="presetActions" class="flex gap-2 hidden">
+                        <button id="editSelectedPreset" class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                            ✏️ แก้ไข
+                        </button>
+                        <button id="deleteSelectedPreset" class="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
+                            🗑️ ลบ
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Checklist -->
+            <div id="activeChecklistSection" class="bg-white rounded-xl card-shadow p-6 mb-6 hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="activePresetName" class="text-lg font-semibold text-gray-800"></h3>
+                    <div class="flex gap-2">
+                        <button id="editActivePreset" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm">
+                            ✏️ แก้ไข
+                        </button>
+                        <button id="resetChecklist" class="bg-gray-500 text-white px-3 py-1 rounded-lg text-sm">
+                            🔄 รีเซ็ต
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="checklistItems" class="space-y-3"></div>
+                
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-800 font-medium">ความคืบหน้า:</span>
+                        <span id="progressText" class="text-blue-600 font-bold">0/0</span>
+                    </div>
+                    <div class="w-full bg-blue-200 rounded-full h-2 mt-2">
+                        <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Page Button -->
+            <div class="mt-6">
+                <button id="nextToCalculator" class="w-full gradient-bg text-white py-4 px-6 rounded-xl font-semibold text-lg transition-all hover:shadow-lg">
+                    🧮 ไปหน้าคำนวณ →
+                </button>
+            </div>
+        </div>
+
+        <!-- Calculator Page -->
+        <div id="calculatorPage" class="hidden">
+            <!-- Trading Type Selection -->
+            <div class="bg-white rounded-xl card-shadow p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">เลือกประเภทการเทรด</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="forexBtn" class="trading-type-btn bg-blue-500 text-white py-3 px-4 rounded-lg font-medium transition-all">
+                        💱 Forex
+                    </button>
+                    <button id="cryptoBtn" class="trading-type-btn bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-all">
+                        ₿ Crypto
+                    </button>
+                </div>
+            </div>
+
+            <!-- Forex Calculator -->
+            <div id="forexCalculator" class="bg-white rounded-xl card-shadow p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">🔢 คำนวณ Lot Size Forex</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">สกุลเงิน</label>
+                        <select id="currencyPair" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                            <option value="EURUSD">EUR/USD</option>
+                            <option value="GBPUSD">GBP/USD</option>
+                            <option value="AUDUSD">AUD/USD</option>
+                            <option value="NZDUSD">NZD/USD</option>
+                            <option value="USDCHF">USD/CHF</option>
+                            <option value="USDCAD">USD/CAD</option>
+                            <option value="USDJPY">USD/JPY</option>
+                            <option value="EURJPY">EUR/JPY</option>
+                            <option value="GBPJPY">GBP/JPY</option>
+                            <option value="AUDJPY">AUD/JPY</option>
+                            <option value="NZDJPY">NZD/JPY</option>
+                            <option value="CADJPY">CAD/JPY</option>
+                            <option value="XAUUSD">XAU/USD (Gold)</option>
+                            <option value="XAGUSD">XAG/USD (Silver)</option>
+                            <option value="USOIL">US Oil</option>
+                            <option value="UKOIL">UK Oil</option>
+                            <option value="US30">US30</option>
+                            <option value="NAS100">NAS100</option>
+                            <option value="SPX500">SPX500</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">สกุลเงินที่ฝาก</label>
+                        <select id="accountCurrency" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                            <option value="USD">USD</option>
+                            <option value="CENT">CENT</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ราคาเปิดโพซิชั่น (จุดเข้า)</label>
+                        <input type="number" id="entryPrice" step="0.00001" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="1.08500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ราคา Stop Loss (SL)</label>
+                        <input type="number" id="stopLoss" step="0.00001" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="1.08000">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ยอดเงินในบัญชี</label>
+                        <input type="number" id="accountBalance" step="0.01" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="1000">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ความเสี่ยง (%)</label>
+                        <input type="number" id="riskPercent" step="0.1" max="100" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="2">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crypto Calculator -->
+            <div id="cryptoCalculator" class="bg-white rounded-xl card-shadow p-6 mb-6 hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">₿ คำนวณ Position Size Crypto</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เหรียญคริปโต</label>
+                        <select id="cryptoCoin" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                            <option value="BTCUSDT">BTC/USDT</option>
+                            <option value="ETHUSDT">ETH/USDT</option>
+                            <option value="BNBUSDT">BNB/USDT</option>
+                            <option value="ADAUSDT">ADA/USDT</option>
+                            <option value="SOLUSDT">SOL/USDT</option>
+                            <option value="XRPUSDT">XRP/USDT</option>
+                            <option value="DOTUSDT">DOT/USDT</option>
+                            <option value="AVAXUSDT">AVAX/USDT</option>
+                            <option value="MATICUSDT">MATIC/USDT</option>
+                            <option value="LINKUSDT">LINK/USDT</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ราคาเปิดโพซิชั่น (จุดเข้า)</label>
+                        <input type="number" id="cryptoEntryPrice" step="0.00001" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="45000">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ราคา Stop Loss (SL)</label>
+                        <input type="number" id="cryptoStopLoss" step="0.00001" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="44000">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ยอดเงินในบัญชี (USDT)</label>
+                        <input type="number" id="cryptoAccountBalance" step="0.01" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="1000">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Leverage (เท่า)</label>
+                        <input type="number" id="leverage" step="1" min="1" max="125" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="10">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ความเสี่ยง (%)</label>
+                        <input type="number" id="cryptoRiskPercent" step="0.1" max="100" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="2">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button id="calculateBtn" class="w-full gradient-bg text-white py-4 px-6 rounded-xl font-semibold text-lg mb-6 transition-all hover:shadow-lg">
+                🧮 คำนวณ
+            </button>
+
+            <!-- Results -->
+            <div id="results" class="bg-white rounded-xl card-shadow p-6 hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">📊 ผลการคำนวณ</h3>
+                <div id="resultContent" class="space-y-3"></div>
+                
+                <!-- Save Confirmation -->
+                <div id="saveConfirmation" class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200 hidden">
+                    <p class="text-sm text-yellow-800 mb-3">💾 ต้องการบันทึกข้อมูลการคำนวณนี้หรือไม่?</p>
+                    <div class="flex gap-3">
+                        <button id="confirmSave" class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg text-sm font-medium">
+                            ✅ บันทึก
+                        </button>
+                        <button id="cancelSave" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium">
+                            ❌ ไม่บันทึก
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Records Page -->
+        <div id="recordsPage" class="hidden">
+            <div class="bg-white rounded-xl card-shadow p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800">📝 บันทึกผลการเทรด</h2>
+                    <div class="flex gap-2">
+                        <button id="sortNewest" class="sort-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-sm font-medium transition-all">
+                            ⬇️ ใหม่-เก่า
+                        </button>
+                        <button id="sortOldest" class="sort-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-sm font-medium transition-all">
+                            ⬆️ เก่า-ใหม่
+                        </button>
+                    </div>
+                </div>
+                <div id="recordsList" class="space-y-4">
+                    <p class="text-gray-500 text-center py-8">ยังไม่มีข้อมูลการเทรด</p>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Statistics Page -->
+        <div id="statsPage" class="hidden">
+            <div class="bg-white rounded-xl card-shadow p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">📊 สถิติการเทรด</h2>
+                <div id="statsContent">
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-blue-600" id="totalTrades">0</div>
+                            <div class="text-sm text-gray-600">เทรดทั้งหมด</div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-green-600" id="winRate">0%</div>
+                            <div class="text-sm text-gray-600">อัตราชนะ</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-emerald-50 p-4 rounded-lg text-center">
+                            <div class="text-lg font-bold text-emerald-600" id="totalProfit">0</div>
+                            <div class="text-sm text-gray-600">กำไรรวม</div>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg text-center">
+                            <div class="text-lg font-bold text-red-600" id="totalLoss">0</div>
+                            <div class="text-sm text-gray-600">ขาดทุนรวม</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-purple-50 p-4 rounded-lg text-center mb-6">
+                        <div class="text-lg font-bold text-purple-600" id="avgRR">0:0</div>
+                        <div class="text-sm text-gray-600">ค่าเฉลี่ย R:R</div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-gray-800 mb-3">📈 กราฟผลการเทรด</h3>
+                        <div id="chartContainer" class="h-32 flex items-end justify-center space-x-2">
+                            <div class="text-gray-400 text-sm">ยังไม่มีข้อมูลเพียงพอสำหรับแสดงกราฟ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create/Edit Preset Modal -->
+        <div id="presetModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                    <h3 id="presetModalTitle" class="text-lg font-semibold text-gray-800 mb-4">📋 สร้างพรีเซ็ตใหม่</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อพรีเซ็ต</label>
+                            <input type="text" id="presetName" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="เช่น: เช็คลิสต์ก่อนเทรด">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">รายการเช็คลิสต์</label>
+                            <div id="checklistItemsEditor" class="space-y-2">
+                                <div class="flex gap-2">
+                                    <input type="text" class="flex-1 p-2 border border-gray-300 rounded-lg text-sm" placeholder="รายการที่ 1">
+                                    <button class="remove-item bg-red-500 text-white px-3 py-2 rounded-lg text-sm">🗑️</button>
+                                </div>
+                            </div>
+                            <button id="addItemBtn" class="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium w-full">
+                                ➕ เพิ่มรายการ
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 mt-6">
+                        <button id="savePreset" class="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg font-medium">
+                            💾 บันทึก
+                        </button>
+                        <button id="cancelPreset" class="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium">
+                            ❌ ยกเลิก
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Record Modal -->
+        <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">✏️ แก้ไขข้อมูลการเทรด</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทคำสั่ง</label>
+                            <select id="editOrderType" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                                <option value="">เลือกประเภทคำสั่ง</option>
+                                <option value="Buy">Buy</option>
+                                <option value="Sell">Sell</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">จุด TP (Target Profit)</label>
+                            <input type="number" id="editTP" step="0.00001" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="ราคาเป้าหมาย">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ผลลัพธ์การเทรด</label>
+                            <select id="editResult" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                                <option value="">เลือกผลลัพธ์</option>
+                                <option value="Win">Win</option>
+                                <option value="Loss">Loss</option>
+                            </select>
+                        </div>
+                        
+                        <div id="editProfitSection" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">จำนวนเงินที่ชนะ</label>
+                            <input type="number" id="editProfitAmount" step="0.01" class="w-full p-3 border border-green-300 rounded-lg bg-green-50" readonly>
+                        </div>
+                        
+                        <div id="editLossSection" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">จำนวนเงินที่เสีย</label>
+                            <input type="number" id="editLossAmount" step="0.01" class="w-full p-3 border border-red-300 rounded-lg bg-red-50" readonly>
+                            
+                            <label class="block text-sm font-medium text-gray-700 mb-2 mt-4">สาเหตุการแพ้</label>
+                            <select id="editLossReason" class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-2">
+                                <option value="">เลือกสาเหตุการแพ้</option>
+                                <option value="ไม่ทำตาม SL">ไม่ทำตาม SL</option>
+                                <option value="วิเคราะห์ผิด">วิเคราะห์ผิด</option>
+                                <option value="ข่าวกระทบ">ข่าวกระทบ</option>
+                                <option value="เข้าจังหวะผิด">เข้าจังหวะผิด</option>
+                                <option value="ตลาดผันผวน">ตลาดผันผวน</option>
+                                <option value="ไม่ทำตามแผน">ไม่ทำตามแผน</option>
+                                <option value="อารมณ์เข้ามาเกี่ยว">อารมณ์เข้ามาเกี่ยว</option>
+                                <option value="อื่นๆ">อื่นๆ</option>
+                            </select>
+                            
+                            <div id="customLossReasonSection" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ระบุสาเหตุอื่นๆ</label>
+                                <textarea id="editCustomLossReason" class="w-full p-3 border border-gray-300 rounded-lg input-focus" rows="2" placeholder="ระบุสาเหตุการแพ้..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="editRRSection" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">R:R Ratio</label>
+                            <input type="text" id="editRR" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 mt-6">
+                        <button id="saveEdit" class="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg font-medium">
+                            💾 บันทึก
+                        </button>
+                        <button id="cancelEdit" class="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium">
+                            ❌ ยกเลิก
+                        </button>
+                        <button id="deleteRecord" class="bg-red-500 text-white py-3 px-4 rounded-lg font-medium">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pipSettings = {
+            // 🔹 คู่เงินหลัก (USD pairs, pip = 0.0001) → pipValue ต่อ 1.0 lot = 10 USD
+            "EURUSD": { multiplier: 10000, pipValue: 10 },
+            "GBPUSD": { multiplier: 10000, pipValue: 10 },
+            "AUDUSD": { multiplier: 10000, pipValue: 10 },
+            "NZDUSD": { multiplier: 10000, pipValue: 10 },
+            "USDCHF": { multiplier: 10000, pipValue: 10 },
+            "USDCAD": { multiplier: 10000, pipValue: 10 },
+
+            // 🔸 คู่เงินที่มี JPY (JPY pairs, pip = 0.01) → ปรับ pipValue ตามสูตรใหม่
+            "USDJPY": { multiplier: 100, pipValue: 7.0 },
+            "EURJPY": { multiplier: 100, pipValue: 7.2 },
+            "GBPJPY": { multiplier: 100, pipValue: 7.5 },
+            "AUDJPY": { multiplier: 100, pipValue: 7.0 },
+            "NZDJPY": { multiplier: 100, pipValue: 6.8 },
+            "CADJPY": { multiplier: 100, pipValue: 7.1 },
+
+            // 🟡 ทองคำ (XAUUSD) → ราคาขยับ 1.00 = 100 USD
+            "XAUUSD": { multiplier: 1, pipValue: 100 },
+
+            // ⚪ เงิน (XAGUSD) → ราคาขยับ 1.00 = ~50 USD
+            "XAGUSD": { multiplier: 1, pipValue: 50 },
+
+            // 🛢 น้ำมัน (USOIL, UKOIL) → ราคาขยับ 1.00 = 10 USD
+            "USOIL": { multiplier: 1, pipValue: 10 },
+            "UKOIL": { multiplier: 1, pipValue: 10 },
+
+            // 📊 ดัชนี → ราคาขยับ 1.00 = 1 USD
+            "US30": { multiplier: 1, pipValue: 1 },
+            "NAS100": { multiplier: 1, pipValue: 1 },
+            "SPX500": { multiplier: 1, pipValue: 1 }
+        };
+
+        let currentMode = 'forex';
+        let currentPage = 'checklist';
+        let currentCalculationData = null;
+        let currentEditingId = null;
+        let currentEditingPresetId = null;
+        let activePresetId = null;
+        let tradingRecords = JSON.parse(localStorage.getItem('tradingRecords') || '[]');
+        let checklistPresets = JSON.parse(localStorage.getItem('checklistPresets') || '[]');
+        let checklistStates = JSON.parse(localStorage.getItem('checklistStates') || '{}');
+        let sortOrder = 'newest';
+
+        // Default presets if none exist
+        if (checklistPresets.length === 0) {
+            checklistPresets = [
+                {
+                    id: 1,
+                    name: "เช็คลิสต์ก่อนเทรด",
+                    items: [
+                        "ตรวจสอบข่าวสารที่สำคัญ",
+                        "วิเคราะห์กราฟและแนวโน้ม",
+                        "กำหนดจุดเข้าและออก",
+                        "คำนวณ Risk Management",
+                        "ตรวจสอบสภาพจิตใจ"
+                    ]
+                }
+            ];
+            localStorage.setItem('checklistPresets', JSON.stringify(checklistPresets));
+        }
+
+        // Check daily limit
+        function checkDailyLimit() {
+            const today = new Date().toDateString();
+            const todayRecords = tradingRecords.filter(record => 
+                new Date(record.date).toDateString() === today
+            );
+            
+            if (todayRecords.length >= 5) {
+                const now = new Date();
+                const tomorrow6AM = new Date();
+                tomorrow6AM.setDate(tomorrow6AM.getDate() + 1);
+                tomorrow6AM.setHours(6, 0, 0, 0);
+                
+                if (now < tomorrow6AM) {
+                    document.getElementById('dailyLimitWarning').classList.remove('hidden');
+                    document.getElementById('calculatorTab').disabled = true;
+                    document.getElementById('calculatorTab').classList.add('opacity-50');
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Navigation
+        document.getElementById('checklistTab').addEventListener('click', () => {
+            switchPage('checklist');
+        });
+
+        document.getElementById('calculatorTab').addEventListener('click', () => {
+            if (checkDailyLimit()) return;
+            switchPage('calculator');
+        });
+
+        document.getElementById('recordsTab').addEventListener('click', () => {
+            switchPage('records');
+        });
+
+        document.getElementById('statsTab').addEventListener('click', () => {
+            switchPage('stats');
+        });
+
+        // Next page button
+        document.getElementById('nextToCalculator').addEventListener('click', () => {
+            if (checkDailyLimit()) return;
+            switchPage('calculator');
+        });
+
+        function switchPage(page) {
+            currentPage = page;
+            
+            // Update navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn bg-gray-200 text-gray-700 py-2 px-2 rounded-lg text-xs font-medium transition-all';
+            });
+            
+            // Hide all pages
+            document.getElementById('checklistPage').classList.add('hidden');
+            document.getElementById('calculatorPage').classList.add('hidden');
+            document.getElementById('recordsPage').classList.add('hidden');
+            document.getElementById('statsPage').classList.add('hidden');
+            
+            if (page === 'checklist') {
+                document.getElementById('checklistTab').className = 'nav-btn bg-blue-500 text-white py-2 px-2 rounded-lg text-xs font-medium transition-all';
+                document.getElementById('checklistPage').classList.remove('hidden');
+                loadPresets();
+            } else if (page === 'calculator') {
+                document.getElementById('calculatorTab').className = 'nav-btn bg-blue-500 text-white py-2 px-2 rounded-lg text-xs font-medium transition-all';
+                document.getElementById('calculatorPage').classList.remove('hidden');
+            } else if (page === 'records') {
+                document.getElementById('recordsTab').className = 'nav-btn bg-blue-500 text-white py-2 px-2 rounded-lg text-xs font-medium transition-all';
+                document.getElementById('recordsPage').classList.remove('hidden');
+                loadRecords();
+            } else if (page === 'stats') {
+                document.getElementById('statsTab').className = 'nav-btn bg-blue-500 text-white py-2 px-2 rounded-lg text-xs font-medium transition-all';
+                document.getElementById('statsPage').classList.remove('hidden');
+                loadStats();
+            }
+        }
+
+        // Preset Management
+        function loadPresets() {
+            const presetSelector = document.getElementById('presetSelector');
+            const presetActions = document.getElementById('presetActions');
+            
+            // Clear existing options
+            presetSelector.innerHTML = '<option value="">-- เลือกพรีเซ็ต --</option>';
+            
+            if (checklistPresets.length === 0) {
+                presetActions.classList.add('hidden');
+                return;
+            }
+
+            // Populate dropdown options
+            checklistPresets.forEach(preset => {
+                const option = document.createElement('option');
+                option.value = preset.id;
+                option.textContent = `${preset.name} (${preset.items.length} รายการ)`;
+                presetSelector.appendChild(option);
+            });
+
+            // Set selected value if there's an active preset
+            if (activePresetId) {
+                presetSelector.value = activePresetId;
+                presetActions.classList.remove('hidden');
+                loadActiveChecklist();
+            } else {
+                presetActions.classList.add('hidden');
+            }
+        }
+
+        function selectPreset(presetId) {
+            activePresetId = presetId;
+            localStorage.setItem('activePresetId', presetId);
+            loadPresets();
+            loadActiveChecklist();
+        }
+
+        // Preset selector event listener
+        document.getElementById('presetSelector').addEventListener('change', (e) => {
+            const selectedId = parseInt(e.target.value);
+            if (selectedId) {
+                selectPreset(selectedId);
+                document.getElementById('presetActions').classList.remove('hidden');
+            } else {
+                activePresetId = null;
+                localStorage.removeItem('activePresetId');
+                document.getElementById('presetActions').classList.add('hidden');
+                document.getElementById('activeChecklistSection').classList.add('hidden');
+            }
+        });
+
+        // Preset action buttons
+        document.getElementById('editSelectedPreset').addEventListener('click', () => {
+            if (activePresetId) {
+                editPreset(activePresetId);
+            }
+        });
+
+        document.getElementById('deleteSelectedPreset').addEventListener('click', () => {
+            if (activePresetId) {
+                deletePreset(activePresetId);
+            }
+        });
+
+        function loadActiveChecklist() {
+            const preset = checklistPresets.find(p => p.id === activePresetId);
+            if (!preset) return;
+
+            document.getElementById('activePresetName').textContent = preset.name;
+            document.getElementById('activeChecklistSection').classList.remove('hidden');
+
+            const checklistItems = document.getElementById('checklistItems');
+            const currentState = checklistStates[activePresetId] || {};
+
+            const itemsHTML = preset.items.map((item, index) => {
+                const isChecked = currentState[index] || false;
+                return `
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                        <input type="checkbox" id="item_${index}" ${isChecked ? 'checked' : ''} 
+                               onchange="toggleChecklistItem(${index})"
+                               class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                        <label for="item_${index}" class="flex-1 text-gray-800 ${isChecked ? 'line-through text-gray-500' : ''}">
+                            ${item}
+                        </label>
+                    </div>
+                `;
+            }).join('');
+
+            checklistItems.innerHTML = itemsHTML;
+            updateProgress();
+        }
+
+        function toggleChecklistItem(index) {
+            if (!checklistStates[activePresetId]) {
+                checklistStates[activePresetId] = {};
+            }
+            
+            checklistStates[activePresetId][index] = !checklistStates[activePresetId][index];
+            localStorage.setItem('checklistStates', JSON.stringify(checklistStates));
+            
+            loadActiveChecklist();
+        }
+
+        function updateProgress() {
+            const preset = checklistPresets.find(p => p.id === activePresetId);
+            if (!preset) return;
+
+            const currentState = checklistStates[activePresetId] || {};
+            const completed = Object.values(currentState).filter(Boolean).length;
+            const total = preset.items.length;
+            const percentage = total > 0 ? (completed / total) * 100 : 0;
+
+            document.getElementById('progressText').textContent = `${completed}/${total}`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        // Preset CRUD Operations
+        document.getElementById('createPresetBtn').addEventListener('click', () => {
+            if (checklistPresets.length >= 3) {
+                alert('สามารถสร้างพรีเซ็ตได้สูงสุด 3 แผนเท่านั้น');
+                return;
+            }
+            openPresetModal();
+        });
+
+        function editPreset(presetId) {
+            const preset = checklistPresets.find(p => p.id === presetId);
+            if (!preset) return;
+            
+            currentEditingPresetId = presetId;
+            openPresetModal(preset);
+        }
+
+        function deletePreset(presetId) {
+            if (confirm('ต้องการลบพรีเซ็ตนี้หรือไม่?')) {
+                checklistPresets = checklistPresets.filter(p => p.id !== presetId);
+                delete checklistStates[presetId];
+                
+                if (activePresetId === presetId) {
+                    activePresetId = null;
+                    localStorage.removeItem('activePresetId');
+                    document.getElementById('activeChecklistSection').classList.add('hidden');
+                    document.getElementById('presetActions').classList.add('hidden');
+                }
+                
+                localStorage.setItem('checklistPresets', JSON.stringify(checklistPresets));
+                localStorage.setItem('checklistStates', JSON.stringify(checklistStates));
+                loadPresets();
+            }
+        }
+
+        function openPresetModal(preset = null) {
+            const modal = document.getElementById('presetModal');
+            const title = document.getElementById('presetModalTitle');
+            const nameInput = document.getElementById('presetName');
+            const itemsEditor = document.getElementById('checklistItemsEditor');
+
+            if (preset) {
+                title.textContent = '✏️ แก้ไขพรีเซ็ต';
+                nameInput.value = preset.name;
+                
+                itemsEditor.innerHTML = preset.items.map(item => `
+                    <div class="flex gap-2">
+                        <input type="text" class="flex-1 p-2 border border-gray-300 rounded-lg text-sm" value="${item}">
+                        <button class="remove-item bg-red-500 text-white px-3 py-2 rounded-lg text-sm">🗑️</button>
+                    </div>
+                `).join('');
+            } else {
+                title.textContent = '📋 สร้างพรีเซ็ตใหม่';
+                nameInput.value = '';
+                
+                itemsEditor.innerHTML = `
+                    <div class="flex gap-2">
+                        <input type="text" class="flex-1 p-2 border border-gray-300 rounded-lg text-sm" placeholder="รายการที่ 1">
+                        <button class="remove-item bg-red-500 text-white px-3 py-2 rounded-lg text-sm">🗑️</button>
+                    </div>
+                `;
+            }
+
+            modal.classList.remove('hidden');
+            setupItemEditor();
+        }
+
+        function setupItemEditor() {
+            // Add item button
+            document.getElementById('addItemBtn').onclick = () => {
+                const itemsEditor = document.getElementById('checklistItemsEditor');
+                const newItem = document.createElement('div');
+                newItem.className = 'flex gap-2';
+                newItem.innerHTML = `
+                    <input type="text" class="flex-1 p-2 border border-gray-300 rounded-lg text-sm" placeholder="รายการใหม่">
+                    <button class="remove-item bg-red-500 text-white px-3 py-2 rounded-lg text-sm">🗑️</button>
+                `;
+                itemsEditor.appendChild(newItem);
+                setupRemoveButtons();
+            };
+
+            setupRemoveButtons();
+        }
+
+        function setupRemoveButtons() {
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.onclick = (e) => {
+                    const itemsEditor = document.getElementById('checklistItemsEditor');
+                    if (itemsEditor.children.length > 1) {
+                        e.target.parentElement.remove();
+                    } else {
+                        alert('ต้องมีรายการอย่างน้อย 1 รายการ');
+                    }
+                };
+            });
+        }
+
+        // Save preset
+        document.getElementById('savePreset').addEventListener('click', () => {
+            const name = document.getElementById('presetName').value.trim();
+            const itemInputs = document.querySelectorAll('#checklistItemsEditor input');
+            const items = Array.from(itemInputs).map(input => input.value.trim()).filter(item => item);
+
+            if (!name) {
+                alert('กรุณาใส่ชื่อพรีเซ็ต');
+                return;
+            }
+
+            if (items.length === 0) {
+                alert('กรุณาใส่รายการอย่างน้อย 1 รายการ');
+                return;
+            }
+
+            if (currentEditingPresetId) {
+                // Edit existing preset
+                const presetIndex = checklistPresets.findIndex(p => p.id === currentEditingPresetId);
+                if (presetIndex !== -1) {
+                    checklistPresets[presetIndex] = {
+                        ...checklistPresets[presetIndex],
+                        name,
+                        items
+                    };
+                }
+                currentEditingPresetId = null;
+            } else {
+                // Create new preset
+                const newPreset = {
+                    id: Date.now(),
+                    name,
+                    items
+                };
+                checklistPresets.push(newPreset);
+            }
+
+            localStorage.setItem('checklistPresets', JSON.stringify(checklistPresets));
+            document.getElementById('presetModal').classList.add('hidden');
+            loadPresets();
+        });
+
+        // Cancel preset
+        document.getElementById('cancelPreset').addEventListener('click', () => {
+            document.getElementById('presetModal').classList.add('hidden');
+            currentEditingPresetId = null;
+        });
+
+        // Reset checklist
+        document.getElementById('resetChecklist').addEventListener('click', () => {
+            if (activePresetId && confirm('ต้องการรีเซ็ตเช็คลิสต์นี้หรือไม่?')) {
+                delete checklistStates[activePresetId];
+                localStorage.setItem('checklistStates', JSON.stringify(checklistStates));
+                loadActiveChecklist();
+                alert('รีเซ็ตเช็คลิสต์เรียบร้อยแล้ว!');
+            }
+        });
+
+        // Edit active preset
+        document.getElementById('editActivePreset').addEventListener('click', () => {
+            if (activePresetId) {
+                editPreset(activePresetId);
+            }
+        });
+
+        // Trading type selection
+        document.getElementById('forexBtn').addEventListener('click', () => {
+            currentMode = 'forex';
+            document.getElementById('forexBtn').className = 'trading-type-btn bg-blue-500 text-white py-3 px-4 rounded-lg font-medium transition-all';
+            document.getElementById('cryptoBtn').className = 'trading-type-btn bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-all';
+            document.getElementById('forexCalculator').classList.remove('hidden');
+            document.getElementById('cryptoCalculator').classList.add('hidden');
+            document.getElementById('results').classList.add('hidden');
+        });
+
+        document.getElementById('cryptoBtn').addEventListener('click', () => {
+            currentMode = 'crypto';
+            document.getElementById('cryptoBtn').className = 'trading-type-btn bg-blue-500 text-white py-3 px-4 rounded-lg font-medium transition-all';
+            document.getElementById('forexBtn').className = 'trading-type-btn bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-all';
+            document.getElementById('cryptoCalculator').classList.remove('hidden');
+            document.getElementById('forexCalculator').classList.add('hidden');
+            document.getElementById('results').classList.add('hidden');
+        });
+
+        // Calculate function
+        document.getElementById('calculateBtn').addEventListener('click', () => {
+            if (checkDailyLimit()) return;
+            
+            if (currentMode === 'forex') {
+                calculateForex();
+            } else {
+                calculateCrypto();
+            }
+        });
+
+        function calculateForex() {
+            const currencyPair = document.getElementById('currencyPair').value;
+            const accountCurrency = document.getElementById('accountCurrency').value;
+            const entryPrice = parseFloat(document.getElementById('entryPrice').value);
+            const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+            const accountBalance = parseFloat(document.getElementById('accountBalance').value);
+            const riskPercent = parseFloat(document.getElementById('riskPercent').value);
+
+            if (!entryPrice || !stopLoss || !accountBalance || !riskPercent) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+
+            const pipSetting = pipSettings[currencyPair];
+            const riskAmount = (accountBalance * riskPercent) / 100;
+            const pipDifference = Math.abs(entryPrice - stopLoss) * pipSetting.multiplier;
+            const lotSize = riskAmount / (pipDifference * pipSetting.pipValue);
+
+            let standardLots = lotSize;
+            let microLots = lotSize * 100;
+
+            // Store calculation data for saving
+            currentCalculationData = {
+                type: 'forex',
+                currencyPair,
+                accountCurrency,
+                entryPrice,
+                stopLoss,
+                accountBalance,
+                riskPercent,
+                riskAmount,
+                lotSize: standardLots,
+                microLots: accountCurrency === 'CENT' ? microLots : null
+            };
+
+            let resultHTML = `
+                <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                    <h4 class="font-semibold text-blue-800 mb-2">📈 ผลการคำนวณ Forex</h4>
+                    <p class="text-sm text-gray-600 mb-2">คู่เงิน: <span class="font-medium">${currencyPair}</span></p>
+                    <p class="text-sm text-gray-600 mb-2">จุดเข้า: <span class="font-medium">${entryPrice}</span></p>
+                    <p class="text-sm text-gray-600 mb-2">Stop Loss: <span class="font-medium">${stopLoss}</span></p>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <span class="text-gray-600">Standard Lots:</span>
+                        <span class="font-semibold text-blue-600">${standardLots.toFixed(2)}</span>
+                    </div>
+            `;
+
+            if (accountCurrency === 'CENT') {
+                resultHTML += `
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <span class="text-gray-600">Micro Lots:</span>
+                        <span class="font-semibold text-blue-600">${microLots.toFixed(2)}</span>
+                    </div>
+                `;
+            }
+
+            resultHTML += `
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <span class="text-gray-600">จำนวนเงินที่จะเสียหาก SL:</span>
+                        <span class="font-semibold text-red-600">${riskAmount.toFixed(2)} ${accountCurrency}</span>
+                    </div>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg mt-4">
+                    <p class="text-sm text-green-700">💡 TP ตามเหมาะสมควร 1:2 ขึ้นไป หากมั่นใจอาจเลื่อน SL มาจุดเข้าได้</p>
+                </div>
+            `;
+
+            if (riskPercent > 30) {
+                resultHTML += `
+                    <div class="bg-red-50 p-4 rounded-lg mt-4">
+                        <p class="text-sm text-red-700 font-medium">⚠️ แพ้แล้วอย่าร้องนะสัสถ้าจะเยอะขนาดนี้</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('resultContent').innerHTML = resultHTML;
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('saveConfirmation').classList.remove('hidden');
+        }
+
+        function calculateCrypto() {
+            const cryptoCoin = document.getElementById('cryptoCoin').value;
+            const entryPrice = parseFloat(document.getElementById('cryptoEntryPrice').value);
+            const stopLoss = parseFloat(document.getElementById('cryptoStopLoss').value);
+            const accountBalance = parseFloat(document.getElementById('cryptoAccountBalance').value);
+            const leverage = parseFloat(document.getElementById('leverage').value);
+            const riskPercent = parseFloat(document.getElementById('cryptoRiskPercent').value);
+
+            if (!entryPrice || !stopLoss || !accountBalance || !leverage || !riskPercent) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+
+            const riskAmount = (accountBalance * riskPercent) / 100;
+            const priceRiskPercent = Math.abs(entryPrice - stopLoss) / entryPrice;
+            const margin = riskAmount / (priceRiskPercent * leverage);
+
+            // Store calculation data for saving
+            currentCalculationData = {
+                type: 'crypto',
+                cryptoCoin,
+                entryPrice,
+                stopLoss,
+                accountBalance,
+                leverage,
+                riskPercent,
+                riskAmount,
+                margin
+            };
+
+            let resultHTML = `
+                <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                    <h4 class="font-semibold text-blue-800 mb-2">₿ ผลการคำนวณ Crypto</h4>
+                    <p class="text-sm text-gray-600 mb-2">เหรียญ: <span class="font-medium">${cryptoCoin}</span></p>
+                    <p class="text-sm text-gray-600 mb-2">จุดเข้า: <span class="font-medium">${entryPrice}</span></p>
+                    <p class="text-sm text-gray-600 mb-2">Stop Loss: <span class="font-medium">${stopLoss}</span></p>
+                    <p class="text-sm text-gray-600 mb-2">Leverage: <span class="font-medium">${leverage}x</span></p>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <span class="text-gray-600">ทุนที่ต้องใช้ (Margin):</span>
+                        <span class="font-semibold text-blue-600">${margin.toFixed(2)} USDT</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <span class="text-gray-600">จำนวนเงินที่จะเสียหาก SL:</span>
+                        <span class="font-semibold text-red-600">${riskAmount.toFixed(2)} USDT</span>
+                    </div>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg mt-4">
+                    <p class="text-sm text-green-700">💡 TP ตามเหมาะสมควร 1:2 ขึ้นไป หากมั่นใจอาจเลื่อน SL มาจุดเข้าได้</p>
+                </div>
+            `;
+
+            if (riskPercent > 30) {
+                resultHTML += `
+                    <div class="bg-red-50 p-4 rounded-lg mt-4">
+                        <p class="text-sm text-red-700 font-medium">⚠️ แพ้แล้วอย่าร้องนะสัสถ้าจะเยอะขนาดนี้</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('resultContent').innerHTML = resultHTML;
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('saveConfirmation').classList.remove('hidden');
+        }
+
+        // Save confirmation handlers
+        document.getElementById('confirmSave').addEventListener('click', () => {
+            if (currentCalculationData) {
+                // Check checklist status
+                let checklistStatus = null;
+                let checklistProgress = null;
+                
+                if (activePresetId) {
+                    const preset = checklistPresets.find(p => p.id === activePresetId);
+                    if (preset) {
+                        const currentState = checklistStates[activePresetId] || {};
+                        const completed = Object.values(currentState).filter(Boolean).length;
+                        const total = preset.items.length;
+                        
+                        checklistStatus = completed === total ? 'complete' : 'incomplete';
+                        checklistProgress = `${completed}/${total}`;
+                    }
+                }
+                
+                const record = {
+                    id: Date.now(),
+                    date: new Date().toISOString(),
+                    ...currentCalculationData,
+                    orderType: null,
+                    tp: null,
+                    result: null,
+                    profitAmount: null,
+                    rr: null,
+                    checklistStatus,
+                    checklistProgress
+                };
+                
+                tradingRecords.push(record);
+                localStorage.setItem('tradingRecords', JSON.stringify(tradingRecords));
+                
+                // Reset checklist after saving
+                if (activePresetId) {
+                    delete checklistStates[activePresetId];
+                    localStorage.setItem('checklistStates', JSON.stringify(checklistStates));
+                }
+                
+                // Reset form
+                resetCalculatorForm();
+                document.getElementById('saveConfirmation').classList.add('hidden');
+                document.getElementById('results').classList.add('hidden');
+                
+                alert('บันทึกข้อมูลเรียบร้อยแล้ว! เช็คลิสต์ถูกรีเซ็ตแล้ว');
+            }
+        });
+
+        document.getElementById('cancelSave').addEventListener('click', () => {
+            document.getElementById('saveConfirmation').classList.add('hidden');
+        });
+
+        function resetCalculatorForm() {
+            if (currentMode === 'forex') {
+                document.getElementById('entryPrice').value = '';
+                document.getElementById('stopLoss').value = '';
+                document.getElementById('accountBalance').value = '';
+                document.getElementById('riskPercent').value = '';
+            } else {
+                document.getElementById('cryptoEntryPrice').value = '';
+                document.getElementById('cryptoStopLoss').value = '';
+                document.getElementById('cryptoAccountBalance').value = '';
+                document.getElementById('leverage').value = '';
+                document.getElementById('cryptoRiskPercent').value = '';
+            }
+        }
+
+        // Sort button handlers
+        document.getElementById('sortNewest').addEventListener('click', () => {
+            sortOrder = 'newest';
+            updateSortButtons();
+            loadRecords();
+        });
+
+        document.getElementById('sortOldest').addEventListener('click', () => {
+            sortOrder = 'oldest';
+            updateSortButtons();
+            loadRecords();
+        });
+
+        function updateSortButtons() {
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.className = 'sort-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-sm font-medium transition-all';
+            });
+            
+            if (sortOrder === 'newest') {
+                document.getElementById('sortNewest').className = 'sort-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-sm font-medium transition-all';
+            } else {
+                document.getElementById('sortOldest').className = 'sort-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-sm font-medium transition-all';
+            }
+        }
+
+        // Load records
+        function loadRecords() {
+            const recordsList = document.getElementById('recordsList');
+            
+            if (tradingRecords.length === 0) {
+                recordsList.innerHTML = '<p class="text-gray-500 text-center py-8">ยังไม่มีข้อมูลการเทรด</p>';
+                return;
+            }
+
+            // Sort records based on current sort order
+            const sortedRecords = [...tradingRecords].sort((a, b) => {
+                if (sortOrder === 'newest') {
+                    return new Date(b.date) - new Date(a.date); // Newest first
+                } else {
+                    return new Date(a.date) - new Date(b.date); // Oldest first
+                }
+            });
+
+            const recordsHTML = sortedRecords.map(record => {
+                const date = new Date(record.date).toLocaleDateString('th-TH');
+                const time = new Date(record.date).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+                
+                let statusBadge = '';
+                if (record.result === 'Win') {
+                    statusBadge = '<span class="bg-green-100 text-green-800 px-3 py-2 rounded-full text-lg font-bold">WIN</span>';
+                } else if (record.result === 'Loss') {
+                    statusBadge = '<span class="bg-red-100 text-red-800 px-3 py-2 rounded-full text-lg font-bold">LOSS</span>';
+                } else {
+                    statusBadge = '<span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">รอผล</span>';
+                }
+
+                // Add checklist status badge
+                let checklistBadge = '';
+                if (record.checklistStatus === 'complete') {
+                    checklistBadge = '<span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">✅ เช็คลิสครบ</span>';
+                } else if (record.checklistStatus === 'incomplete') {
+                    checklistBadge = '<span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">❌ เช็คลิสไม่ครบ</span>';
+                } else {
+                    checklistBadge = '<span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">ไม่มีเช็คลิส</span>';
+                }
+
+                // Determine border color, background color, and profit display
+                let borderClass = 'border-2 border-gray-200';
+                let backgroundClass = 'bg-gray-50';
+                let profitDisplay = '';
+                
+                // Check if record is complete (has result)
+                const isComplete = record.result && record.orderType && record.tp;
+                
+                if (record.result === 'Win') {
+                    borderClass = 'border-2 border-green-400';
+                    backgroundClass = isComplete ? 'bg-green-50' : 'bg-gray-50';
+                    profitDisplay = `<div class="mt-2 text-sm font-semibold text-green-600">💰 +${record.profitAmount ? record.profitAmount.toFixed(2) : '0.00'}</div>`;
+                } else if (record.result === 'Loss') {
+                    borderClass = 'border-2 border-green-400';
+                    backgroundClass = isComplete ? 'bg-red-50' : 'bg-gray-50';
+                    profitDisplay = `<div class="mt-2 text-sm font-semibold text-red-600">💸 -${record.riskAmount ? record.riskAmount.toFixed(2) : '0.00'}</div>`;
+                } else {
+                    borderClass = 'border-2 border-red-400';
+                    backgroundClass = 'bg-gray-50';
+                }
+
+                return `
+                    <div class="${backgroundClass} rounded-lg ${borderClass} overflow-hidden">
+                        <!-- Header - Always visible -->
+                        <div class="p-4 cursor-pointer hover:bg-gray-100 transition-colors" onclick="toggleRecord(${record.id})">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">${record.type === 'forex' ? record.currencyPair : record.cryptoCoin}</h4>
+                                        <p class="text-sm text-gray-600">${date} ${time}</p>
+                                    </div>
+                                    ${statusBadge}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    ${profitDisplay ? profitDisplay.replace('<div class="mt-2 text-sm font-semibold', '<div class="text-sm font-semibold').replace('</div>', '').replace('💰 ', '').replace('💸 ', '') : '<span class="text-gray-500 text-sm">รอผล</span>'}
+                                    <svg id="arrow-${record.id}" class="w-5 h-5 text-gray-400 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Expandable Details -->
+                        <div id="details-${record.id}" class="hidden border-t border-gray-200 bg-white">
+                            <div class="p-4 space-y-3">
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <span class="text-gray-500">Entry:</span>
+                                        <span class="font-medium">${record.entryPrice}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">SL:</span>
+                                        <span class="font-medium">${record.stopLoss}</span>
+                                    </div>
+                                </div>
+                                
+                                ${record.tp ? `
+                                    <div class="text-sm">
+                                        <span class="text-gray-500">TP:</span>
+                                        <span class="font-medium">${record.tp}</span>
+                                        ${record.rr ? `<span class="ml-2 text-blue-600">R:R ${record.rr}</span>` : ''}
+                                    </div>
+                                ` : ''}
+                                
+                                ${record.result === 'Loss' && record.lossReason ? `
+                                    <div class="text-sm bg-red-50 p-2 rounded border border-red-200">
+                                        <span class="text-red-700 font-medium">สาเหตุการแพ้:</span>
+                                        <span class="text-red-600">${record.lossReason}</span>
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="flex gap-2">
+                                    ${checklistBadge}
+                                    ${record.checklistProgress ? `
+                                        <span class="text-xs text-gray-600">${record.checklistProgress}</span>
+                                    ` : ''}
+                                </div>
+                                
+                                <div class="flex gap-2 pt-2 border-t border-gray-100">
+                                    <button onclick="editRecord(${record.id}); event.stopPropagation();" class="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                                        ✏️ แก้ไข
+                                    </button>
+                                    <button onclick="deleteRecordDirect(${record.id}); event.stopPropagation();" class="bg-red-500 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            recordsList.innerHTML = recordsHTML;
+        }
+
+        // Toggle record details
+        function toggleRecord(id) {
+            const details = document.getElementById(`details-${id}`);
+            const arrow = document.getElementById(`arrow-${id}`);
+            
+            if (details.classList.contains('hidden')) {
+                details.classList.remove('hidden');
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                details.classList.add('hidden');
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Delete record directly
+        function deleteRecordDirect(id) {
+            if (confirm('ต้องการลบข้อมูลนี้หรือไม่?')) {
+                tradingRecords = tradingRecords.filter(r => r.id !== id);
+                localStorage.setItem('tradingRecords', JSON.stringify(tradingRecords));
+                loadRecords();
+                alert('ลบข้อมูลเรียบร้อยแล้ว!');
+            }
+        }
+
+        // Edit record
+        function editRecord(id) {
+            const record = tradingRecords.find(r => r.id === id);
+            if (!record) return;
+
+            currentEditingId = id;
+            
+            // Populate edit form
+            document.getElementById('editOrderType').value = record.orderType || '';
+            document.getElementById('editTP').value = record.tp || '';
+            document.getElementById('editResult').value = record.result || '';
+            
+            if (record.result === 'Win') {
+                document.getElementById('editProfitSection').classList.remove('hidden');
+                document.getElementById('editLossSection').classList.add('hidden');
+                document.getElementById('editProfitAmount').value = record.profitAmount || '';
+            } else if (record.result === 'Loss') {
+                document.getElementById('editProfitSection').classList.add('hidden');
+                document.getElementById('editLossSection').classList.remove('hidden');
+                document.getElementById('editLossAmount').value = record.riskAmount;
+                
+                // Load loss reason
+                document.getElementById('editLossReason').value = record.lossReason || '';
+                if (record.lossReason === 'อื่นๆ' && record.customLossReason) {
+                    document.getElementById('customLossReasonSection').classList.remove('hidden');
+                    document.getElementById('editCustomLossReason').value = record.customLossReason;
+                } else {
+                    document.getElementById('customLossReasonSection').classList.add('hidden');
+                    document.getElementById('editCustomLossReason').value = '';
+                }
+            } else {
+                document.getElementById('editProfitSection').classList.add('hidden');
+                document.getElementById('editLossSection').classList.add('hidden');
+            }
+
+            if (record.rr) {
+                document.getElementById('editRRSection').classList.remove('hidden');
+                document.getElementById('editRR').value = record.rr;
+            } else {
+                document.getElementById('editRRSection').classList.add('hidden');
+            }
+
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        // Edit form handlers
+        document.getElementById('editTP').addEventListener('input', calculateProfitFromTP);
+        document.getElementById('editResult').addEventListener('change', handleResultChange);
+        document.getElementById('editLossReason').addEventListener('change', handleLossReasonChange);
+
+        function calculateProfitFromTP() {
+            const record = tradingRecords.find(r => r.id === currentEditingId);
+            if (!record) return;
+
+            const tp = parseFloat(document.getElementById('editTP').value);
+            const orderType = document.getElementById('editOrderType').value;
+            
+            if (!tp || !orderType) return;
+
+            let profit = 0;
+            
+            if (record.type === 'crypto') {
+                if (orderType === 'Buy') {
+                    profit = (tp - record.entryPrice) * (record.margin * record.leverage) / record.entryPrice;
+                } else if (orderType === 'Sell') {
+                    profit = (record.entryPrice - tp) * (record.margin * record.leverage) / record.entryPrice;
+                }
+            } else if (record.type === 'forex') {
+                const pipSetting = pipSettings[record.currencyPair];
+                const pipDifference = Math.abs(tp - record.entryPrice) * pipSetting.multiplier;
+                profit = pipDifference * pipSetting.pipValue * record.lotSize;
+            }
+
+            document.getElementById('editProfitAmount').value = profit.toFixed(2);
+            
+            // Calculate R:R
+            if (profit > 0) {
+                const rr = (profit / record.riskAmount).toFixed(2);
+                document.getElementById('editRR').value = `1:${rr}`;
+            }
+        }
+
+        function handleResultChange() {
+            const result = document.getElementById('editResult').value;
+            const record = tradingRecords.find(r => r.id === currentEditingId);
+            
+            if (result === 'Win') {
+                document.getElementById('editProfitSection').classList.remove('hidden');
+                document.getElementById('editLossSection').classList.add('hidden');
+                document.getElementById('editRRSection').classList.remove('hidden');
+                calculateProfitFromTP();
+            } else if (result === 'Loss') {
+                document.getElementById('editProfitSection').classList.add('hidden');
+                document.getElementById('editLossSection').classList.remove('hidden');
+                document.getElementById('editRRSection').classList.remove('hidden');
+                document.getElementById('editLossAmount').value = record.riskAmount;
+                document.getElementById('editRR').value = '1:0';
+            } else {
+                document.getElementById('editProfitSection').classList.add('hidden');
+                document.getElementById('editLossSection').classList.add('hidden');
+                document.getElementById('editRRSection').classList.add('hidden');
+            }
+        }
+
+        function handleLossReasonChange() {
+            const reason = document.getElementById('editLossReason').value;
+            const customSection = document.getElementById('customLossReasonSection');
+            
+            if (reason === 'อื่นๆ') {
+                customSection.classList.remove('hidden');
+            } else {
+                customSection.classList.add('hidden');
+                document.getElementById('editCustomLossReason').value = '';
+            }
+        }
+
+        // Save edit
+        document.getElementById('saveEdit').addEventListener('click', () => {
+            const orderType = document.getElementById('editOrderType').value;
+            const tp = document.getElementById('editTP').value;
+            const result = document.getElementById('editResult').value;
+
+            // Validation
+            let hasError = false;
+            document.querySelectorAll('#editModal input, #editModal select').forEach(input => {
+                input.classList.remove('border-red-500');
+            });
+
+            if (!orderType) {
+                document.getElementById('editOrderType').classList.add('border-red-500');
+                hasError = true;
+            }
+            if (!tp) {
+                document.getElementById('editTP').classList.add('border-red-500');
+                hasError = true;
+            }
+            if (!result) {
+                document.getElementById('editResult').classList.add('border-red-500');
+                hasError = true;
+            }
+
+            if (hasError) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+
+            // Get loss reason data
+            let lossReason = null;
+            let customLossReason = null;
+            
+            if (result === 'Loss') {
+                lossReason = document.getElementById('editLossReason').value;
+                if (lossReason === 'อื่นๆ') {
+                    customLossReason = document.getElementById('editCustomLossReason').value.trim();
+                    if (!customLossReason) {
+                        alert('กรุณาระบุสาเหตุการแพ้');
+                        return;
+                    }
+                    lossReason = customLossReason;
+                }
+                
+                if (!lossReason) {
+                    document.getElementById('editLossReason').classList.add('border-red-500');
+                    alert('กรุณาเลือกสาเหตุการแพ้');
+                    return;
+                }
+            }
+
+            // Update record
+            const recordIndex = tradingRecords.findIndex(r => r.id === currentEditingId);
+            if (recordIndex !== -1) {
+                tradingRecords[recordIndex] = {
+                    ...tradingRecords[recordIndex],
+                    orderType,
+                    tp: parseFloat(tp),
+                    result,
+                    profitAmount: result === 'Win' ? parseFloat(document.getElementById('editProfitAmount').value) : null,
+                    rr: document.getElementById('editRR').value,
+                    lossReason: result === 'Loss' ? lossReason : null,
+                    customLossReason: result === 'Loss' && document.getElementById('editLossReason').value === 'อื่นๆ' ? customLossReason : null
+                };
+
+                localStorage.setItem('tradingRecords', JSON.stringify(tradingRecords));
+                document.getElementById('editModal').classList.add('hidden');
+                loadRecords();
+                alert('บันทึกการแก้ไขเรียบร้อยแล้ว!');
+            }
+        });
+
+        // Cancel edit
+        document.getElementById('cancelEdit').addEventListener('click', () => {
+            document.getElementById('editModal').classList.add('hidden');
+        });
+
+        // Delete record
+        document.getElementById('deleteRecord').addEventListener('click', () => {
+            if (confirm('ต้องการลบข้อมูลนี้หรือไม่?')) {
+                tradingRecords = tradingRecords.filter(r => r.id !== currentEditingId);
+                localStorage.setItem('tradingRecords', JSON.stringify(tradingRecords));
+                document.getElementById('editModal').classList.add('hidden');
+                loadRecords();
+                alert('ลบข้อมูลเรียบร้อยแล้ว!');
+            }
+        });
+
+        // Load statistics
+        function loadStats() {
+            const totalTrades = tradingRecords.filter(r => r.result).length;
+            const wins = tradingRecords.filter(r => r.result === 'Win').length;
+            const losses = tradingRecords.filter(r => r.result === 'Loss').length;
+            const winRate = totalTrades > 0 ? ((wins / totalTrades) * 100).toFixed(1) : 0;
+            
+            const totalProfit = tradingRecords
+                .filter(r => r.result === 'Win')
+                .reduce((sum, r) => sum + (r.profitAmount || 0), 0);
+            
+            const totalLoss = tradingRecords
+                .filter(r => r.result === 'Loss')
+                .reduce((sum, r) => sum + (r.riskAmount || 0), 0);
+
+            // Calculate average R:R
+            const rrValues = tradingRecords
+                .filter(r => r.rr && r.rr !== '1:0')
+                .map(r => parseFloat(r.rr.split(':')[1]));
+            
+            const avgRR = rrValues.length > 0 ? 
+                `1:${(rrValues.reduce((sum, val) => sum + val, 0) / rrValues.length).toFixed(2)}` : 
+                '0:0';
+
+            document.getElementById('totalTrades').textContent = totalTrades;
+            document.getElementById('winRate').textContent = `${winRate}%`;
+            document.getElementById('totalProfit').textContent = `+${totalProfit.toFixed(2)}`;
+            document.getElementById('totalLoss').textContent = `-${totalLoss.toFixed(2)}`;
+            document.getElementById('avgRR').textContent = avgRR;
+
+            // Simple chart
+            if (totalTrades > 0) {
+                const chartHTML = `
+                    <div class="flex items-end justify-center space-x-4 h-24">
+                        <div class="flex flex-col items-center">
+                            <div class="bg-green-500 rounded-t" style="height: ${(wins/totalTrades)*80}px; width: 40px;"></div>
+                            <span class="text-xs mt-1">Win (${wins})</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-red-500 rounded-t" style="height: ${(losses/totalTrades)*80}px; width: 40px;"></div>
+                            <span class="text-xs mt-1">Loss (${losses})</span>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('chartContainer').innerHTML = chartHTML;
+            }
+        }
+
+        // Initialize
+        checkDailyLimit();
+        
+        // Load saved active preset
+        const savedActivePresetId = localStorage.getItem('activePresetId');
+        if (savedActivePresetId) {
+            activePresetId = parseInt(savedActivePresetId);
+        }
+        
+        // Start with checklist page
+        switchPage('checklist');
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96098a00878e4b7d',t:'MTc1Mjc1MzIwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
