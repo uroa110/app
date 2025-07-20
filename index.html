@@ -2851,10 +2851,8 @@
         }
 
         // Add event listeners for source switching
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('urlSourceBtn').addEventListener('click', () => switchImageSource('url'));
-            document.getElementById('fileSourceBtn').addEventListener('click', () => switchImageSource('file'));
-        });
+        document.getElementById('urlSourceBtn').addEventListener('click', () => switchImageSource('url'));
+        document.getElementById('fileSourceBtn').addEventListener('click', () => switchImageSource('file'));
 
         // Save image
         document.getElementById('saveImage').addEventListener('click', () => {
@@ -2872,26 +2870,45 @@
             const urlSection = document.getElementById('urlSourceSection');
             const isUrlSource = !urlSection.classList.contains('hidden');
             
-            if (isUrlSource && !url) {
-                alert(currentLanguage === 'en' ? 'ENTER IMAGE URL' : 'กรอก URL รูปภาพ');
-                return;
-            }
-            
             // Check if file source is active and has file
             const fileSection = document.getElementById('fileSourceSection');
             const isFileSource = !fileSection.classList.contains('hidden');
             
-            if (isFileSource && !fileInput.files[0] && !currentEditingImageId) {
-                alert(currentLanguage === 'en' ? 'SELECT IMAGE FILE' : 'เลือกไฟล์รูปภาพ');
-                return;
+            // Validation for new images
+            if (!currentEditingImageId) {
+                if (isUrlSource && !url) {
+                    alert(currentLanguage === 'en' ? 'ENTER IMAGE URL' : 'กรอก URL รูปภาพ');
+                    return;
+                }
+                
+                if (isFileSource && !fileInput.files[0]) {
+                    alert(currentLanguage === 'en' ? 'SELECT IMAGE FILE' : 'เลือกไฟล์รูปภาพ');
+                    return;
+                }
             }
             
             const categoryIndex = techniqueCategories.findIndex(c => c.id === currentCategoryId);
-            if (categoryIndex === -1) return;
+            if (categoryIndex === -1) {
+                alert(currentLanguage === 'en' ? 'CATEGORY NOT FOUND' : 'ไม่พบหมวดหมู่');
+                return;
+            }
             
             // Handle file upload
             if (isFileSource && fileInput.files[0]) {
                 const file = fileInput.files[0];
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert(currentLanguage === 'en' ? 'PLEASE SELECT IMAGE FILE' : 'กรุณาเลือกไฟล์รูปภาพ');
+                    return;
+                }
+                
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(currentLanguage === 'en' ? 'IMAGE TOO LARGE (MAX 5MB)' : 'รูปภาพใหญ่เกินไป (สูงสุด 5MB)');
+                    return;
+                }
+                
                 const reader = new FileReader();
                 
                 reader.onload = function(e) {
@@ -2905,17 +2922,25 @@
                     saveImageData(imageData, categoryIndex);
                 };
                 
+                reader.onerror = function() {
+                    alert(currentLanguage === 'en' ? 'ERROR READING FILE' : 'เกิดข้อผิดพลาดในการอ่านไฟล์');
+                };
+                
                 reader.readAsDataURL(file);
             } else {
                 // Handle URL or existing image edit
                 const imageData = {
                     id: currentEditingImageId || Date.now(),
                     title,
-                    url: isUrlSource ? url : undefined,
                     description
                 };
                 
-                // Keep existing dataUrl if editing file-based image
+                // Add URL if using URL source
+                if (isUrlSource) {
+                    imageData.url = url;
+                }
+                
+                // Keep existing dataUrl if editing file-based image without new file
                 if (currentEditingImageId && isFileSource) {
                     const existingImage = techniqueCategories[categoryIndex].images.find(img => img.id === currentEditingImageId);
                     if (existingImage && existingImage.dataUrl) {
@@ -2928,33 +2953,69 @@
         });
         
         function saveImageData(imageData, categoryIndex) {
-            if (currentEditingImageId) {
-                // Edit existing image
-                const imageIndex = techniqueCategories[categoryIndex].images.findIndex(img => img.id === currentEditingImageId);
-                if (imageIndex !== -1) {
-                    techniqueCategories[categoryIndex].images[imageIndex] = {
-                        ...techniqueCategories[categoryIndex].images[imageIndex],
-                        ...imageData
-                    };
+            try {
+                if (currentEditingImageId) {
+                    // Edit existing image
+                    const imageIndex = techniqueCategories[categoryIndex].images.findIndex(img => img.id === currentEditingImageId);
+                    if (imageIndex !== -1) {
+                        techniqueCategories[categoryIndex].images[imageIndex] = {
+                            ...techniqueCategories[categoryIndex].images[imageIndex],
+                            ...imageData
+                        };
+                    }
+                } else {
+                    // Add new image
+                    if (!techniqueCategories[categoryIndex].images) {
+                        techniqueCategories[categoryIndex].images = [];
+                    }
+                    techniqueCategories[categoryIndex].images.push(imageData);
                 }
-            } else {
-                // Add new image
-                if (!techniqueCategories[categoryIndex].images) {
-                    techniqueCategories[categoryIndex].images = [];
+                
+                // Save to localStorage with error handling
+                try {
+                    localStorage.setItem('techniqueCategories', JSON.stringify(techniqueCategories));
+                } catch (e) {
+                    if (e.name === 'QuotaExceededError') {
+                        alert(currentLanguage === 'en' ? 'STORAGE FULL! DELETE SOME IMAGES' : 'พื้นที่เก็บข้อมูลเต็ม! ลบรูปภาพบางส่วน');
+                        return;
+                    }
+                    throw e;
                 }
-                techniqueCategories[categoryIndex].images.push(imageData);
+                
+                // Reset form and close modal
+                document.getElementById('imageTitle').value = '';
+                document.getElementById('imageUrl').value = '';
+                document.getElementById('imageFile').value = '';
+                document.getElementById('imageDescription').value = '';
+                document.getElementById('imageModal').classList.add('hidden');
+                
+                // Reset editing states
+                currentEditingImageId = null;
+                currentCategoryId = null;
+                
+                // Reload techniques display
+                loadTechniques();
+                
+                alert(currentLanguage === 'en' ? 'IMAGE SAVED!' : 'บันทึกรูปภาพแล้ว!');
+                
+            } catch (error) {
+                console.error('Error saving image:', error);
+                alert(currentLanguage === 'en' ? 'ERROR SAVING IMAGE' : 'เกิดข้อผิดพลาดในการบันทึกรูปภาพ');
             }
-            
-            localStorage.setItem('techniqueCategories', JSON.stringify(techniqueCategories));
-            document.getElementById('imageModal').classList.add('hidden');
-            loadTechniques();
-            
-            alert(currentLanguage === 'en' ? 'IMAGE SAVED!' : 'บันทึกรูปภาพแล้ว!');
         }
 
         // Cancel image
         document.getElementById('cancelImage').addEventListener('click', () => {
+            // Reset form
+            document.getElementById('imageTitle').value = '';
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('imageFile').value = '';
+            document.getElementById('imageDescription').value = '';
+            
+            // Close modal
             document.getElementById('imageModal').classList.add('hidden');
+            
+            // Reset editing states
             currentEditingImageId = null;
             currentCategoryId = null;
         });
@@ -2993,5 +3054,5 @@
         // Start with checklist page
         switchPage('checklist');
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'961fe4c3a7bf4b65',t:'MTc1Mjk4NzYxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'961ff6f2655b4ba0',t:'MTc1Mjk4ODM1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
