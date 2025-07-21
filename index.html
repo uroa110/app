@@ -390,12 +390,38 @@
         </button>
         
         <div class="fade-in">
-            <h1 class="text-2xl font-800 text-white mb-2" data-lang-key="app-title">
-                <span class="text-gradient">HOPEYA</span> TRADING
-            </h1>
-            <p class="text-sm font-300 text-purple-300" data-lang-key="app-subtitle">Modern Trading System</p>
-            <div class="mt-3 text-sm font-500 glow-text" data-lang-key="app-features">
-                ✅ Smart Checklist & 🧮 Advanced Calculator
+            <!-- Enhanced Logo Design -->
+            <div class="flex items-center justify-center mb-4">
+                <div class="logo-container relative">
+                    <!-- Background glow effect -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
+                    
+                    <!-- Main logo card -->
+                    <div class="relative modern-card px-8 py-4 backdrop-blur-xl border-2 border-purple-400/30">
+                        <!-- Trading icon -->
+                        <div class="flex items-center justify-center mb-2">
+                            <div class="text-3xl mr-3 animate-bounce">📈</div>
+                            <div class="text-center">
+                                <h1 class="text-2xl font-900 leading-tight" data-lang-key="app-title">
+                                    <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600 bg-clip-text text-transparent font-black tracking-wider">HOPEYA</span>
+                                    <br>
+                                    <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-bold text-lg tracking-widest">TRADING</span>
+                                </h1>
+                            </div>
+                            <div class="text-3xl ml-3 animate-bounce" style="animation-delay: 0.5s;">💎</div>
+                        </div>
+                        
+                        <!-- Subtitle with enhanced styling -->
+                        <div class="text-center">
+                            <p class="text-xs font-500 text-purple-300 mb-2 tracking-wide" data-lang-key="app-subtitle">Modern Trading System</p>
+                            <div class="flex items-center justify-center gap-2 text-xs font-600">
+                                <span class="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">✅ Smart Checklist</span>
+                                <span class="text-purple-400">•</span>
+                                <span class="bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">🧮 Advanced Calculator</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -768,32 +794,32 @@
         <div id="presetModal" class="modal-backdrop fixed top-0 left-0 w-full h-full flex items-center justify-center hidden z-50">
             <div class="modern-card p-6 soft-glow" style="max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
                 <div class="mb-6">
-                    <h3 id="presetModalTitle" class="text-lg font-700 glow-text">📋 CREATE NEW PRESET</h3>
+                    <h3 id="presetModalTitle" class="text-lg font-700 glow-text" data-lang-key="create-preset-title">📋 CREATE NEW PRESET</h3>
                 </div>
                 <div class="space-y-6">
                     <div>
-                        <label class="text-sm font-600 text-white block mb-2">PRESET NAME:</label>
-                        <input type="text" id="presetName" class="modern-input w-full p-4 text-sm font-500" placeholder="PRE-TRADE CHECKLIST">
+                        <label class="text-sm font-600 text-white block mb-2" data-lang-key="preset-name-label">PRESET NAME:</label>
+                        <input type="text" id="presetName" class="modern-input w-full p-4 text-sm font-500" data-lang-key="preset-name-placeholder" placeholder="PRE-TRADE CHECKLIST">
                     </div>
                     
                     <div>
-                        <label class="text-sm font-600 text-white block mb-3">CHECKLIST ITEMS:</label>
+                        <label class="text-sm font-600 text-white block mb-3" data-lang-key="checklist-items-label">CHECKLIST ITEMS:</label>
                         <div id="checklistItemsEditor" class="space-y-3 mb-4">
                             <div class="flex gap-3">
-                                <input type="text" class="modern-input flex-1 p-4 text-sm font-500" placeholder="ITEM 1">
+                                <input type="text" class="modern-input flex-1 p-4 text-sm font-500" data-lang-key="item-placeholder" placeholder="ITEM 1">
                                 <button class="remove-item danger-glow text-white px-4 py-4 text-sm font-600 rounded-2xl">🗑️</button>
                             </div>
                         </div>
-                        <button id="addItemBtn" class="pill-button w-full py-3 text-sm font-600">
+                        <button id="addItemBtn" class="pill-button w-full py-3 text-sm font-600" data-lang-key="add-item">
                             ➕ ADD ITEM
                         </button>
                     </div>
                 </div>
                 <div class="flex gap-3 mt-6">
-                    <button id="savePreset" class="pill-button flex-1 py-3 text-sm font-600">
+                    <button id="savePreset" class="pill-button flex-1 py-3 text-sm font-600" data-lang-key="save">
                         💾 SAVE
                     </button>
-                    <button id="cancelPreset" class="language-toggle flex-1 py-3 text-sm font-600 rounded-full">
+                    <button id="cancelPreset" class="language-toggle flex-1 py-3 text-sm font-600 rounded-full" data-lang-key="cancel">
                         ❌ CANCEL
                     </button>
                 </div>
@@ -896,7 +922,7 @@
         <div id="fullScreenModal" class="modal-backdrop fixed top-0 left-0 w-full h-full flex items-center justify-center hidden z-60">
             <div class="relative w-full h-full flex items-center justify-center p-4">
                 <!-- Close Button -->
-                <button id="closeFullScreen" class="absolute top-6 right-6 z-70 danger-glow text-white px-4 py-4 text-lg font-600 rounded-full hover:scale-110 transition-transform">
+                <button id="closeFullScreen" class="absolute top-6 right-6 z-70 danger-glow text-white px-4 py-4 text-lg font-600 rounded-full hover:scale-110 transition-transform" style="z-index: 9999;">
                     ✕
                 </button>
                 
@@ -1071,12 +1097,26 @@
                 'edit-image': '✏️',
                 'delete-image': '🗑️',
                 'image-source': 'IMAGE SOURCE:',
-                'image-file-help': 'SELECT IMAGE FROM YOUR DEVICE'
+                'image-file-help': 'SELECT IMAGE FROM YOUR DEVICE',
+                'create-preset-title': '📋 CREATE NEW PRESET',
+                'edit-preset-title': '✏️ EDIT PRESET',
+                'preset-name-label': 'PRESET NAME:',
+                'preset-name-placeholder': 'PRE-TRADE CHECKLIST',
+                'checklist-items-label': 'CHECKLIST ITEMS:',
+                'item-placeholder': 'NEW ITEM',
+                'add-item': '➕ ADD ITEM'
             },
             th: {
                 'app-title': 'HOPEYA TRADING',
                 'app-subtitle': 'โปรแกรมเทรดสร้างวินัย',
                 'app-features': '✅ เช็คลิสต์อัจฉริยะ & 🧮 เครื่องคิดเลขขั้นสูง',
+                'create-preset-title': '📋 สร้างพรีเซ็ตใหม่',
+                'edit-preset-title': '✏️ แก้ไขพรีเซ็ต',
+                'preset-name-label': 'ชื่อพรีเซ็ต:',
+                'preset-name-placeholder': 'เช็คลิสต์ก่อนเทรด',
+                'checklist-items-label': 'รายการเช็คลิสต์:',
+                'item-placeholder': 'รายการใหม่',
+                'add-item': '➕ เพิ่มรายการ',
                 'tab-checklist': 'เช็คลิสต์',
                 'tab-checklist-short': 'ลิสต์',
                 'tab-calc': 'คำนวณ',
@@ -1117,6 +1157,8 @@
                 'no-preset-data': 'ไม่มีข้อมูลเทมเพลต',
                 'win-streak': 'ชนะทั้งหมด',
                 'loss-streak': 'แพ้ทั้งหมด',
+                'stats-win': 'ชนะ',
+                'stats-loss': 'แพ้',
                 'forex-results': 'ผลลัพธ์ฟอเร็กซ์',
                 'crypto-results': 'ผลลัพธ์คริปโต',
                 'pair': 'คู่เงิน',
@@ -1200,7 +1242,11 @@
             document.querySelectorAll('[data-lang-key]').forEach(element => {
                 const key = element.getAttribute('data-lang-key');
                 if (lang[key]) {
-                    element.textContent = lang[key];
+                    if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                        element.placeholder = lang[key];
+                    } else {
+                        element.textContent = lang[key];
+                    }
                 }
             });
             
@@ -1561,7 +1607,7 @@
             const itemsEditor = document.getElementById('checklistItemsEditor');
 
             if (preset) {
-                title.textContent = '✏️ EDIT PRESET';
+                title.setAttribute('data-lang-key', 'edit-preset-title');
                 nameInput.value = preset.name;
                 
                 itemsEditor.innerHTML = preset.items.map(item => `
@@ -1571,7 +1617,7 @@
                     </div>
                 `).join('');
             } else {
-                title.textContent = '📋 CREATE NEW PRESET';
+                title.setAttribute('data-lang-key', 'create-preset-title');
                 nameInput.value = '';
                 
                 itemsEditor.innerHTML = `
@@ -1593,7 +1639,7 @@
                 const newItem = document.createElement('div');
                 newItem.className = 'flex gap-3';
                 newItem.innerHTML = `
-                    <input type="text" class="modern-input flex-1 p-4 text-sm font-500" placeholder="NEW ITEM">
+                    <input type="text" class="modern-input flex-1 p-4 text-sm font-500" data-lang-key="item-placeholder" placeholder="NEW ITEM">
                     <button class="remove-item danger-glow text-white px-4 py-4 text-sm font-600 rounded-2xl">🗑️</button>
                 `;
                 itemsEditor.appendChild(newItem);
@@ -2445,15 +2491,18 @@
 
             // Modern chart
             if (totalTrades > 0) {
+                const winText = currentLanguage === 'th' ? 'ชนะ' : 'WIN';
+                const lossText = currentLanguage === 'th' ? 'แพ้' : 'LOSS';
+                
                 const chartHTML = `
                     <div class="flex items-end justify-center space-x-6 h-24">
                         <div class="flex flex-col items-center">
                             <div class="success-glow rounded-lg" style="height: ${(wins/totalTrades)*80}px; width: 50px;"></div>
-                            <span class="text-xs mt-2 font-600 text-white">WIN (${wins})</span>
+                            <span class="text-xs mt-2 font-600 text-white">${winText} (${wins})</span>
                         </div>
                         <div class="flex flex-col items-center">
                             <div class="danger-glow rounded-lg" style="height: ${(losses/totalTrades)*80}px; width: 50px;"></div>
-                            <span class="text-xs mt-2 font-600 text-white">LOSS (${losses})</span>
+                            <span class="text-xs mt-2 font-600 text-white">${lossText} (${losses})</span>
                         </div>
                     </div>
                 `;
@@ -2546,21 +2595,21 @@
                         <div class="grid grid-cols-3 gap-4 mb-4">
                             <div class="text-center">
                                 <div class="text-sm font-700 glow-text">${total}</div>
-                                <div class="text-xs font-400 text-white">TOTAL</div>
+                                <div class="text-xs font-400 text-white" data-lang-key="total">ทั้งหมด</div>
                             </div>
                             <div class="text-center">
                                 <div class="text-sm font-700 text-green-400">${wins}</div>
-                                <div class="text-xs font-400 text-white">WIN</div>
+                                <div class="text-xs font-400 text-white">${currentLanguage === 'th' ? 'ชนะ' : 'WIN'}</div>
                             </div>
                             <div class="text-center">
                                 <div class="text-sm font-700 text-red-400">${losses}</div>
-                                <div class="text-xs font-400 text-white">LOSS</div>
+                                <div class="text-xs font-400 text-white">${currentLanguage === 'th' ? 'แพ้' : 'LOSS'}</div>
                             </div>
                         </div>
                         
                         <div class="stat-card p-4 text-center">
                             <div class="text-sm font-700 glow-text">${winRate}%</div>
-                            <div class="text-xs font-400 text-white">WIN RATE</div>
+                            <div class="text-xs font-400 text-white" data-lang-key="win-rate">อัตราชนะ</div>
                         </div>
                     </div>
                 `;
@@ -2576,22 +2625,28 @@
                 if (best.winRate !== worst.winRate) {
                     const difference = (best.winRate - worst.winRate).toFixed(1);
                     
+                    const comparisonTitle = currentLanguage === 'th' ? '🏆 เปรียบเทียบเทมเพลต' : '🏆 PRESET COMPARISON';
+                    const hasHighestText = currentLanguage === 'th' ? 'มีอัตราชนะสูงสุด' : 'HAS HIGHEST WIN RATE';
+                    const betterThanText = currentLanguage === 'th' ? 'ดีกว่า' : 'BETTER THAN';
+                    const byText = currentLanguage === 'th' ? 'โดย' : 'BY';
+                    const useMoreText = currentLanguage === 'th' ? `💡 ใช้ "${best.preset.name}" มากกว่า!` : `💡 USE "${best.preset.name}" MORE!`;
+                    
                     statsHTML += `
                         <div class="modern-card p-5" style="background: rgba(139, 92, 246, 0.15);">
                             <div class="text-center">
-                                <h4 class="font-700 text-sm mb-3 text-white">🏆 PRESET COMPARISON</h4>
+                                <h4 class="font-700 text-sm mb-3 text-white">${comparisonTitle}</h4>
                                 <p class="text-sm mb-3 text-white font-400">
                                     <span class="font-700 text-green-400">${best.preset.name}</span>
-                                    HAS HIGHEST WIN RATE
+                                    ${hasHighestText}
                                     <span class="font-700 text-green-400">${best.winRate}%</span>
                                 </p>
                                 <p class="text-sm text-white font-400">
-                                    BETTER THAN
+                                    ${betterThanText}
                                     <span class="font-700 text-red-400">${worst.preset.name}</span>
-                                    BY <span class="font-700 glow-text">${difference}%</span>
+                                    ${byText} <span class="font-700 glow-text">${difference}%</span>
                                 </p>
                                 <p class="text-sm mt-3 blink-glow text-white font-600">
-                                    💡 USE "${best.preset.name}" MORE!
+                                    ${useMoreText}
                                 </p>
                             </div>
                         </div>
@@ -3167,7 +3222,11 @@
         }
 
         // Full screen event listeners
-        document.getElementById('closeFullScreen').addEventListener('click', closeFullScreen);
+        document.getElementById('closeFullScreen').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeFullScreen();
+        });
         document.getElementById('prevImage').addEventListener('click', () => navigateFullScreen('prev'));
         document.getElementById('nextImage').addEventListener('click', () => navigateFullScreen('next'));
 
@@ -3201,5 +3260,5 @@
         // Start with checklist page
         switchPage('checklist');
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962b46db6346c8e3',t:'MTc1MzEwNjk3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962b9c67140d10f8',t:'MTc1MzExMDQ3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
