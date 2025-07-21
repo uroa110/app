@@ -323,6 +323,16 @@
             background: linear-gradient(135deg, var(--light-purple), var(--primary-purple));
         }
         
+        /* Hide scrollbar for navigation tabs */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
         .text-gradient {
             background: linear-gradient(135deg, var(--primary-purple), var(--light-purple));
             -webkit-background-clip: text;
@@ -393,37 +403,35 @@
     <!-- Navigation -->
     <div class="max-w-md mx-auto p-6">
         <div class="tab-container fade-in">
-            <div class="flex justify-center space-x-1">
-                <button id="checklistTab" class="tab-active px-2 py-3 text-xs font-600 flex-1">
+            <div class="flex overflow-x-auto scrollbar-hide space-x-1 pb-1" style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+                <button id="checklistTab" class="tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]">
                     <div class="text-center">
                         <div class="text-base mb-1">✅</div>
-                        <div data-lang-key="tab-checklist" class="hidden sm:block">CHECKLIST</div>
-                        <div data-lang-key="tab-checklist-short" class="sm:hidden">LIST</div>
+                        <div data-lang-key="tab-checklist" class="whitespace-nowrap">CHECKLIST</div>
                     </div>
                 </button>
-                <button id="calculatorTab" class="tab-inactive px-2 py-3 text-xs font-600 flex-1">
+                <button id="calculatorTab" class="tab-inactive px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]">
                     <div class="text-center">
                         <div class="text-base mb-1">🧮</div>
-                        <div data-lang-key="tab-calc">CALC</div>
+                        <div data-lang-key="tab-calc" class="whitespace-nowrap">CALC</div>
                     </div>
                 </button>
-                <button id="recordsTab" class="tab-inactive px-2 py-3 text-xs font-600 flex-1">
+                <button id="recordsTab" class="tab-inactive px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]">
                     <div class="text-center">
                         <div class="text-base mb-1">📝</div>
-                        <div data-lang-key="tab-records" class="hidden sm:block">RECORDS</div>
-                        <div data-lang-key="tab-records-short" class="sm:hidden">REC</div>
+                        <div data-lang-key="tab-records" class="whitespace-nowrap">RECORDS</div>
                     </div>
                 </button>
-                <button id="statsTab" class="tab-inactive px-2 py-3 text-xs font-600 flex-1">
+                <button id="statsTab" class="tab-inactive px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]">
                     <div class="text-center">
                         <div class="text-base mb-1">📊</div>
-                        <div data-lang-key="tab-stats">STATS</div>
+                        <div data-lang-key="tab-stats" class="whitespace-nowrap">STATS</div>
                     </div>
                 </button>
-                <button id="techniquesTab" class="tab-inactive px-2 py-3 text-xs font-600 flex-1">
+                <button id="techniquesTab" class="tab-inactive px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]">
                     <div class="text-center">
                         <div class="text-base mb-1">📚</div>
-                        <div data-lang-key="tab-techniques">TECH</div>
+                        <div data-lang-key="tab-techniques" class="whitespace-nowrap">TECH</div>
                     </div>
                 </button>
             </div>
@@ -884,6 +892,35 @@
             </div>
         </div>
 
+        <!-- Full Screen Image Modal -->
+        <div id="fullScreenModal" class="modal-backdrop fixed top-0 left-0 w-full h-full flex items-center justify-center hidden z-60">
+            <div class="relative w-full h-full flex items-center justify-center p-4">
+                <!-- Close Button -->
+                <button id="closeFullScreen" class="absolute top-6 right-6 z-70 danger-glow text-white px-4 py-4 text-lg font-600 rounded-full hover:scale-110 transition-transform">
+                    ✕
+                </button>
+                
+                <!-- Image Container -->
+                <div class="relative max-w-full max-h-full">
+                    <img id="fullScreenImage" class="max-w-full max-h-full object-contain rounded-2xl shadow-2xl" alt="">
+                    
+                    <!-- Image Info -->
+                    <div class="absolute bottom-0 left-0 right-0 modern-card p-4 m-4 backdrop-blur-lg">
+                        <h3 id="fullScreenTitle" class="text-lg font-700 text-white mb-2"></h3>
+                        <p id="fullScreenDescription" class="text-sm text-purple-300 font-400"></p>
+                    </div>
+                </div>
+                
+                <!-- Navigation Arrows (if multiple images) -->
+                <button id="prevImage" class="absolute left-6 top-1/2 transform -translate-y-1/2 pill-button px-4 py-4 text-xl font-700 hidden">
+                    ←
+                </button>
+                <button id="nextImage" class="absolute right-6 top-1/2 transform -translate-y-1/2 pill-button px-4 py-4 text-xl font-700 hidden">
+                    →
+                </button>
+            </div>
+        </div>
+
         <!-- Edit Record Modal -->
         <div id="editModal" class="modal-backdrop fixed top-0 left-0 w-full h-full flex items-center justify-center hidden z-50">
             <div class="modern-card p-6 soft-glow" style="max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
@@ -1334,7 +1371,7 @@
             
             // Update navigation
             document.querySelectorAll('#checklistTab, #calculatorTab, #recordsTab, #statsTab, #techniquesTab').forEach(btn => {
-                btn.className = 'tab-inactive px-4 py-3 text-sm font-600 flex-1';
+                btn.className = 'tab-inactive px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
             });
             
             // Hide all pages
@@ -1345,22 +1382,22 @@
             document.getElementById('techniquesPage').classList.add('hidden');
             
             if (page === 'checklist') {
-                document.getElementById('checklistTab').className = 'tab-active px-4 py-3 text-sm font-600 flex-1';
+                document.getElementById('checklistTab').className = 'tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
                 document.getElementById('checklistPage').classList.remove('hidden');
                 loadPresets();
             } else if (page === 'calculator') {
-                document.getElementById('calculatorTab').className = 'tab-active px-4 py-3 text-sm font-600 flex-1';
+                document.getElementById('calculatorTab').className = 'tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
                 document.getElementById('calculatorPage').classList.remove('hidden');
             } else if (page === 'records') {
-                document.getElementById('recordsTab').className = 'tab-active px-4 py-3 text-sm font-600 flex-1';
+                document.getElementById('recordsTab').className = 'tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
                 document.getElementById('recordsPage').classList.remove('hidden');
                 loadRecords();
             } else if (page === 'stats') {
-                document.getElementById('statsTab').className = 'tab-active px-4 py-3 text-sm font-600 flex-1';
+                document.getElementById('statsTab').className = 'tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
                 document.getElementById('statsPage').classList.remove('hidden');
                 loadStats();
             } else if (page === 'techniques') {
-                document.getElementById('techniquesTab').className = 'tab-active px-4 py-3 text-sm font-600 flex-1';
+                document.getElementById('techniquesTab').className = 'tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
                 document.getElementById('techniquesPage').classList.remove('hidden');
                 loadTechniques();
             }
@@ -2621,9 +2658,15 @@
                         <div class="images-grid grid grid-cols-2 gap-3 hidden" id="images-${category.id}">
                             ${category.images && category.images.length > 0 ? 
                                 category.images.map(image => `
-                                    <div class="image-card modern-card p-3 relative group">
-                                        <img src="${image.url || image.dataUrl}" alt="${image.title}" class="w-full h-24 object-cover rounded-lg mb-2" 
+                                    <div class="image-card modern-card p-3 relative group cursor-pointer" onclick="openFullScreen(${category.id}, ${image.id})">
+                                        <img src="${image.url || image.dataUrl}" alt="${image.title}" class="w-full h-24 object-cover rounded-lg mb-2 hover:scale-105 transition-transform" 
                                              onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDIwMCAxMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTI4IiBmaWxsPSIjMUExQTJFIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iNjQiIGZpbGw9IiM4QjVDRjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZHk9Ii4zZW0iPklNQUdFIEVSUk9SPC90ZXh0Pgo8L3N2Zz4K';">
+                                        
+                                        <!-- Fullscreen indicator -->
+                                        <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-all rounded-lg flex items-center justify-center">
+                                            <div class="text-white text-xl opacity-0 group-hover:opacity-100 transition-opacity">🔍</div>
+                                        </div>
+                                        
                                         <h4 class="text-xs font-600 text-white mb-1">${image.title}</h4>
                                         ${image.description ? `<p class="text-xs text-purple-300 mb-2 line-clamp-2">${image.description}</p>` : ''}
                                         <div class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
@@ -3048,11 +3091,115 @@
             }
         }
 
+        // Full screen image functionality
+        let currentFullScreenCategory = null;
+        let currentFullScreenImageIndex = 0;
+
+        function openFullScreen(categoryId, imageId) {
+            const category = techniqueCategories.find(c => c.id === categoryId);
+            if (!category || !category.images) return;
+            
+            const imageIndex = category.images.findIndex(img => img.id === imageId);
+            if (imageIndex === -1) return;
+            
+            currentFullScreenCategory = category;
+            currentFullScreenImageIndex = imageIndex;
+            
+            showFullScreenImage();
+            document.getElementById('fullScreenModal').classList.remove('hidden');
+            
+            // Show navigation arrows if there are multiple images
+            const prevBtn = document.getElementById('prevImage');
+            const nextBtn = document.getElementById('nextImage');
+            
+            if (category.images.length > 1) {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+            } else {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+            }
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showFullScreenImage() {
+            if (!currentFullScreenCategory) return;
+            
+            const image = currentFullScreenCategory.images[currentFullScreenImageIndex];
+            if (!image) return;
+            
+            document.getElementById('fullScreenImage').src = image.url || image.dataUrl;
+            document.getElementById('fullScreenTitle').textContent = image.title;
+            document.getElementById('fullScreenDescription').textContent = image.description || '';
+            
+            // Hide description if empty
+            const descElement = document.getElementById('fullScreenDescription');
+            if (!image.description) {
+                descElement.parentElement.classList.add('hidden');
+            } else {
+                descElement.parentElement.classList.remove('hidden');
+            }
+        }
+
+        function closeFullScreen() {
+            document.getElementById('fullScreenModal').classList.add('hidden');
+            currentFullScreenCategory = null;
+            currentFullScreenImageIndex = 0;
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
+
+        function navigateFullScreen(direction) {
+            if (!currentFullScreenCategory) return;
+            
+            const totalImages = currentFullScreenCategory.images.length;
+            
+            if (direction === 'prev') {
+                currentFullScreenImageIndex = (currentFullScreenImageIndex - 1 + totalImages) % totalImages;
+            } else if (direction === 'next') {
+                currentFullScreenImageIndex = (currentFullScreenImageIndex + 1) % totalImages;
+            }
+            
+            showFullScreenImage();
+        }
+
+        // Full screen event listeners
+        document.getElementById('closeFullScreen').addEventListener('click', closeFullScreen);
+        document.getElementById('prevImage').addEventListener('click', () => navigateFullScreen('prev'));
+        document.getElementById('nextImage').addEventListener('click', () => navigateFullScreen('next'));
+
+        // Close full screen when clicking outside image
+        document.getElementById('fullScreenModal').addEventListener('click', (e) => {
+            if (e.target.id === 'fullScreenModal') {
+                closeFullScreen();
+            }
+        });
+
+        // Keyboard navigation for full screen
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('fullScreenModal').classList.contains('hidden')) {
+                switch(e.key) {
+                    case 'Escape':
+                        closeFullScreen();
+                        break;
+                    case 'ArrowLeft':
+                        navigateFullScreen('prev');
+                        break;
+                    case 'ArrowRight':
+                        navigateFullScreen('next');
+                        break;
+                }
+            }
+        });
+
         // Initialize language
         updateLanguage();
         
         // Start with checklist page
         switchPage('checklist');
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'961ff6f2655b4ba0',t:'MTc1Mjk4ODM1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962b46db6346c8e3',t:'MTc1MzEwNjk3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
