@@ -937,13 +937,7 @@
                     </div>
                 </div>
                 
-                <!-- Navigation Arrows (if multiple images) -->
-                <button id="prevImage" class="absolute left-6 top-1/2 transform -translate-y-1/2 pill-button px-4 py-4 text-xl font-700 hidden">
-                    ←
-                </button>
-                <button id="nextImage" class="absolute right-6 top-1/2 transform -translate-y-1/2 pill-button px-4 py-4 text-xl font-700 hidden">
-                    →
-                </button>
+
             </div>
         </div>
 
@@ -3163,18 +3157,6 @@
             showFullScreenImage();
             document.getElementById('fullScreenModal').classList.remove('hidden');
             
-            // Show navigation arrows if there are multiple images
-            const prevBtn = document.getElementById('prevImage');
-            const nextBtn = document.getElementById('nextImage');
-            
-            if (category.images.length > 1) {
-                prevBtn.classList.remove('hidden');
-                nextBtn.classList.remove('hidden');
-            } else {
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.add('hidden');
-            }
-            
             // Prevent body scroll
             document.body.style.overflow = 'hidden';
         }
@@ -3227,8 +3209,7 @@
             e.stopPropagation();
             closeFullScreen();
         });
-        document.getElementById('prevImage').addEventListener('click', () => navigateFullScreen('prev'));
-        document.getElementById('nextImage').addEventListener('click', () => navigateFullScreen('next'));
+
 
         // Close full screen when clicking outside image
         document.getElementById('fullScreenModal').addEventListener('click', (e) => {
@@ -3260,5 +3241,5 @@
         // Start with checklist page
         switchPage('checklist');
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962b9c67140d10f8',t:'MTc1MzExMDQ3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962bba7522cd45b3',t:'MTc1MzExMTcwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
