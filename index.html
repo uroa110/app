@@ -385,7 +385,7 @@
     <!-- Header -->
     <div class="header-glass p-6 text-center relative">
         <!-- Language Switcher -->
-        <button id="languageToggle" class="language-toggle absolute top-6 right-6 px-4 py-2 text-sm font-medium">
+        <button id="languageToggle" class="language-toggle absolute top-4 right-4 px-3 py-2 text-sm font-medium z-10">
             🌐 <span id="currentLang">EN</span>
         </button>
         
@@ -397,28 +397,57 @@
                     <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
                     
                     <!-- Main logo card -->
-                    <div class="relative modern-card px-8 py-4 backdrop-blur-xl border-2 border-purple-400/30">
-                        <!-- Trading icon -->
-                        <div class="flex items-center justify-center mb-2">
-                            <div class="text-3xl mr-3 animate-bounce">📈</div>
-                            <div class="text-center">
-                                <h1 class="text-2xl font-900 leading-tight" data-lang-key="app-title">
-                                    <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600 bg-clip-text text-transparent font-black tracking-wider">HOPEYA</span>
-                                    <br>
-                                    <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-bold text-lg tracking-widest">TRADING</span>
-                                </h1>
-                            </div>
-                            <div class="text-3xl ml-3 animate-bounce" style="animation-delay: 0.5s;">💎</div>
+                    <div class="relative modern-card px-10 py-6 backdrop-blur-xl border-2 border-purple-400/40 shadow-2xl">
+                        <!-- Animated background elements -->
+                        <div class="absolute inset-0 overflow-hidden rounded-2xl">
+                            <div class="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-20 animate-pulse"></div>
+                            <div class="absolute -bottom-4 -right-4 w-6 h-6 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full opacity-30 animate-pulse" style="animation-delay: 1s;"></div>
+                            <div class="absolute top-1/2 -right-2 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-25 animate-pulse" style="animation-delay: 2s;"></div>
                         </div>
                         
-                        <!-- Subtitle with enhanced styling -->
-                        <div class="text-center">
-                            <p class="text-xs font-500 text-purple-300 mb-2 tracking-wide" data-lang-key="app-subtitle">Modern Trading System</p>
-                            <div class="flex items-center justify-center gap-2 text-xs font-600">
-                                <span class="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">✅ Smart Checklist</span>
-                                <span class="text-purple-400">•</span>
-                                <span class="bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">🧮 Advanced Calculator</span>
+                        <!-- Trading icon with enhanced effects -->
+                        <div class="relative flex items-center justify-center mb-3">
+                            <div class="text-4xl mr-4 animate-bounce drop-shadow-lg">📈</div>
+                            <div class="text-center relative">
+                                <!-- Main title with multiple effects -->
+                                <h1 class="text-3xl font-900 leading-tight relative" data-lang-key="app-title">
+                                    <!-- Glow effect behind text -->
+                                    <div class="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600 blur-sm opacity-30"></div>
+                                    
+                                    <!-- Main text -->
+                                    <span class="relative bg-gradient-to-r from-purple-300 via-pink-300 to-purple-500 bg-clip-text text-transparent font-black tracking-wider drop-shadow-2xl" style="text-shadow: 0 0 30px rgba(168, 85, 247, 0.8); -webkit-text-stroke: 3px rgba(168, 85, 247, 0.6); font-weight: 900; font-family: Impact, Arial Black, sans-serif;">HOPEYA</span>
+                                    <br>
+                                    <span class="relative bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent font-black text-xl tracking-[0.3em] drop-shadow-xl" style="text-shadow: 0 0 20px rgba(139, 92, 246, 0.6); -webkit-text-stroke: 2.5px rgba(139, 92, 246, 0.6); font-weight: 900; font-family: Impact, Arial Black, sans-serif;">TRADING</span>
+                                </h1>
+                                
+                                <!-- Decorative elements -->
+                                <div class="absolute -top-2 -left-2 text-yellow-400 text-xs animate-pulse">⭐</div>
+                                <div class="absolute -top-1 -right-2 text-cyan-400 text-xs animate-pulse" style="animation-delay: 0.5s;">✨</div>
+                                <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 text-pink-400 text-xs animate-pulse" style="animation-delay: 1s;">💫</div>
                             </div>
+                            <div class="text-4xl ml-4 animate-bounce drop-shadow-lg" style="animation-delay: 0.5s;">💎</div>
+                        </div>
+                        
+                        <!-- Enhanced subtitle section -->
+                        <div class="text-center relative">
+                            <!-- Divider line -->
+                            <div class="w-20 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent mx-auto mb-3 opacity-60"></div>
+                            
+                            <p class="text-sm font-600 text-purple-200 mb-3 tracking-wide drop-shadow-sm" data-lang-key="app-subtitle" style="text-shadow: 0 0 10px rgba(196, 181, 253, 0.5);">Modern Trading System</p>
+                            
+                            <!-- Feature badges with enhanced styling -->
+                            <div class="flex items-center justify-center gap-3 text-xs font-700">
+                                <div class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm border border-green-400/30 rounded-full px-3 py-1.5">
+                                    <span class="bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent drop-shadow-sm">✅ Smart Checklist</span>
+                                </div>
+                                <div class="text-purple-300 animate-pulse">•</div>
+                                <div class="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm border border-blue-400/30 rounded-full px-3 py-1.5">
+                                    <span class="bg-gradient-to-r from-blue-300 to-cyan-400 bg-clip-text text-transparent drop-shadow-sm">🧮 Advanced Calculator</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Bottom decorative line -->
+                            <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent mx-auto mt-3 opacity-40"></div>
                         </div>
                     </div>
                 </div>
@@ -3241,5 +3270,5 @@
         // Start with checklist page
         switchPage('checklist');
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962bba7522cd45b3',t:'MTc1MzExMTcwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962f0353043945bd',t:'MTc1MzE0NjE1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
