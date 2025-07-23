@@ -3655,6 +3655,11 @@
             loadDailyReminders();
             loadCustomReminders();
             setupNotificationScheduler();
+            
+            // Check permission every 2 seconds in case user changes it manually
+            setInterval(() => {
+                checkNotificationPermission();
+            }, 2000);
         }
 
         function checkNotificationPermission() {
@@ -3669,13 +3674,24 @@
                 return;
             }
             
+            console.log('Current notification permission:', Notification.permission); // Debug log
+            
             if (Notification.permission === 'granted') {
                 permissionText.setAttribute('data-lang-key', 'permission-granted');
+                permissionText.textContent = currentLanguage === 'en' ? 'GRANTED' : 'อนุญาต';
                 permissionText.className = 'text-xs text-green-400';
                 enableBtn.style.display = 'none';
+            } else if (Notification.permission === 'denied') {
+                permissionText.setAttribute('data-lang-key', 'permission-denied');
+                permissionText.textContent = currentLanguage === 'en' ? 'DENIED - CHECK BROWSER SETTINGS' : 'ปฏิเสธ - ตรวจสอบการตั้งค่าเบราว์เซอร์';
+                permissionText.className = 'text-xs text-red-400';
+                enableBtn.textContent = currentLanguage === 'en' ? '⚙️ BROWSER SETTINGS' : '⚙️ ตั้งค่าเบราว์เซอร์';
+                enableBtn.style.display = 'block';
             } else {
                 permissionText.setAttribute('data-lang-key', 'permission-denied');
-                permissionText.className = 'text-xs text-red-400';
+                permissionText.textContent = currentLanguage === 'en' ? 'NOT ENABLED' : 'ยังไม่เปิดใช้';
+                permissionText.className = 'text-xs text-orange-400';
+                enableBtn.textContent = currentLanguage === 'en' ? '🔔 ENABLE' : '🔔 เปิดใช้';
                 enableBtn.style.display = 'block';
             }
             
@@ -3896,15 +3912,49 @@
         // Event Listeners
         document.getElementById('enableNotifications').addEventListener('click', async () => {
             try {
+                // Check current permission status
+                if (Notification.permission === 'denied') {
+                    // Show instructions for manually enabling notifications
+                    const instructions = currentLanguage === 'en' ? 
+                        `🔔 NOTIFICATION BLOCKED!\n\nTo enable notifications:\n\n1. Click the 🔒 lock icon in address bar\n2. Find "Notifications" setting\n3. Change to "Allow"\n4. Refresh this page\n\nOR\n\nGo to browser Settings > Site Settings > Notifications` :
+                        `🔔 การแจ้งเตือนถูกบล็อก!\n\nวิธีเปิดการแจ้งเตือน:\n\n1. คลิกไอคอน 🔒 ในแถบที่อยู่\n2. หาการตั้งค่า "การแจ้งเตือน"\n3. เปลี่ยนเป็น "อนุญาต"\n4. รีเฟรชหน้านี้\n\nหรือ\n\nไปที่การตั้งค่าเบราว์เซอร์ > การตั้งค่าไซต์ > การแจ้งเตือน`;
+                    
+                    alert(instructions);
+                    return;
+                }
+                
+                // Request permission
                 const permission = await Notification.requestPermission();
+                console.log('Permission result:', permission); // Debug log
+                
                 if (permission === 'granted') {
                     checkNotificationPermission();
-                    alert(currentLanguage === 'en' ? 'NOTIFICATIONS ENABLED!' : 'เปิดการแจ้งเตือนแล้ว!');
+                    setupNotificationScheduler();
+                    
+                    // Show success message and test notification
+                    const successMsg = currentLanguage === 'en' ? 'NOTIFICATIONS ENABLED!' : 'เปิดการแจ้งเตือนแล้ว!';
+                    alert(successMsg);
+                    
+                    // Send test notification
+                    setTimeout(() => {
+                        showNotification('HOPEYA TRADING', currentLanguage === 'en' ? 'Notifications are now working!' : 'การแจ้งเตือนทำงานแล้ว!');
+                    }, 1000);
+                    
+                } else if (permission === 'denied') {
+                    checkNotificationPermission();
+                    const deniedMsg = currentLanguage === 'en' ? 
+                        'NOTIFICATIONS DENIED!\n\nPlease enable manually in browser settings.' : 
+                        'ปฏิเสธการแจ้งเตือน!\n\nกรุณาเปิดใช้ในการตั้งค่าเบราว์เซอร์';
+                    alert(deniedMsg);
                 } else {
-                    alert(currentLanguage === 'en' ? 'NOTIFICATIONS DENIED' : 'ปฏิเสธการแจ้งเตือน');
+                    checkNotificationPermission();
+                    const defaultMsg = currentLanguage === 'en' ? 'NOTIFICATION PERMISSION NOT GRANTED' : 'ไม่ได้รับอนุญาตการแจ้งเตือน';
+                    alert(defaultMsg);
                 }
             } catch (error) {
                 console.error('Error requesting notification permission:', error);
+                const errorMsg = currentLanguage === 'en' ? 'ERROR ENABLING NOTIFICATIONS' : 'เกิดข้อผิดพลาดในการเปิดการแจ้งเตือน';
+                alert(errorMsg);
             }
         });
 
@@ -4057,5 +4107,5 @@
         // Start with checklist page
         switchPage('checklist');
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9637f4d1d1c34ba7',t:'MTc1MzIzOTkyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9638232db44f1104',t:'MTc1MzI0MTgyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
