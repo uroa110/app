@@ -485,6 +485,12 @@
                         <div data-lang-key="tab-techniques" class="whitespace-nowrap">TECH</div>
                     </div>
                 </button>
+                <button id="notificationsTab" class="tab-inactive px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]">
+                    <div class="text-center">
+                        <div class="text-base mb-1">🔔</div>
+                        <div data-lang-key="tab-notifications" class="whitespace-nowrap">NOTIFY</div>
+                    </div>
+                </button>
             </div>
         </div>
     </div>
@@ -761,6 +767,154 @@
             </div>
         </div>
 
+        <!-- Notifications Page -->
+        <div id="notificationsPage" class="hidden">
+            <div class="modern-card p-6 mb-6 fade-in">
+                <h2 class="text-lg font-700 glow-text mb-6 text-center" data-lang-key="notifications-title">🔔 NOTIFICATIONS</h2>
+                
+                <!-- Permission Status -->
+                <div id="permissionStatus" class="modern-card p-4 mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-600 text-white mb-1" data-lang-key="notification-permission">NOTIFICATION PERMISSION</h3>
+                            <p id="permissionText" class="text-xs text-purple-300" data-lang-key="permission-denied">DENIED</p>
+                        </div>
+                        <button id="enableNotifications" class="pill-button px-4 py-2 text-sm font-600" data-lang-key="enable-notifications">
+                            🔔 ENABLE
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Market Sessions -->
+                <div class="modern-card p-6 mb-6">
+                    <h3 class="text-lg font-700 glow-text mb-4" data-lang-key="market-sessions">🌏 MARKET SESSIONS</h3>
+                    
+                    <div class="space-y-4">
+                        <!-- Asian Session -->
+                        <div class="checklist-item p-4" style="background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), transparent);">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="modern-checkbox" id="asianSessionCheck"></div>
+                                    <div>
+                                        <h4 class="text-sm font-600 text-white" data-lang-key="asian-session">🌅 ASIAN SESSION</h4>
+                                        <p class="text-xs text-orange-300" data-lang-key="asian-session-desc">TOKYO MARKET • CALM TRENDS</p>
+                                    </div>
+                                </div>
+                                <input type="time" id="asianSessionTime" class="modern-input px-3 py-2 text-sm" value="05:00" disabled>
+                            </div>
+                            <div class="text-xs text-orange-200 bg-orange-900/20 p-3 rounded-lg mt-2">
+                                <p data-lang-key="asian-session-info">05:00-12:00 • Perfect for calm trading & clear trends</p>
+                            </div>
+                        </div>
+
+                        <!-- London Session -->
+                        <div class="checklist-item p-4" style="background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), transparent);">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="modern-checkbox" id="londonSessionCheck"></div>
+                                    <div>
+                                        <h4 class="text-sm font-600 text-white" data-lang-key="london-session">🇬🇧 LONDON SESSION</h4>
+                                        <p class="text-xs text-green-300" data-lang-key="london-session-desc">EUROPE MARKET • BEGINNER FRIENDLY</p>
+                                    </div>
+                                </div>
+                                <input type="time" id="londonSessionTime" class="modern-input px-3 py-2 text-sm" value="14:00" disabled>
+                            </div>
+                            <div class="text-xs text-green-200 bg-green-900/20 p-3 rounded-lg mt-2">
+                                <p data-lang-key="london-session-info">14:00-22:00 • EUR/USD, GBP/USD • Easy trends for beginners</p>
+                            </div>
+                        </div>
+
+                        <!-- New York Session -->
+                        <div class="checklist-item p-4" style="background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), transparent);">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="modern-checkbox" id="nySessionCheck"></div>
+                                    <div>
+                                        <h4 class="text-sm font-600 text-white" data-lang-key="ny-session">🗽 NEW YORK SESSION</h4>
+                                        <p class="text-xs text-red-300" data-lang-key="ny-session-desc">US MARKET • HIGH VOLATILITY</p>
+                                    </div>
+                                </div>
+                                <input type="time" id="nySessionTime" class="modern-input px-3 py-2 text-sm" value="19:00" disabled>
+                            </div>
+                            <div class="text-xs text-red-200 bg-red-900/20 p-3 rounded-lg mt-2">
+                                <p data-lang-key="ny-session-info">19:00-03:00 • USD pairs • High volatility & news impact</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Reminders -->
+                <div class="modern-card p-6 mb-6">
+                    <h3 class="text-lg font-700 glow-text mb-4" data-lang-key="daily-reminders">📅 DAILY REMINDERS</h3>
+                    
+                    <div class="space-y-4">
+                        <!-- Analysis Time -->
+                        <div class="checklist-item p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="modern-checkbox" id="analysisCheck"></div>
+                                    <div>
+                                        <h4 class="text-sm font-600 text-white" data-lang-key="analysis-time">ANALYSIS TIME</h4>
+                                        <p class="text-xs text-purple-300" data-lang-key="analysis-desc">DAILY MARKET ANALYSIS</p>
+                                    </div>
+                                </div>
+                                <input type="time" id="analysisTime" class="modern-input px-3 py-2 text-sm" value="08:30" disabled>
+                            </div>
+                        </div>
+
+                        <!-- Trading Session End -->
+                        <div class="checklist-item p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="modern-checkbox" id="sessionEndCheck"></div>
+                                    <div>
+                                        <h4 class="text-sm font-600 text-white" data-lang-key="session-end">SESSION END</h4>
+                                        <p class="text-xs text-purple-300" data-lang-key="session-end-desc">STOP TRADING REMINDER</p>
+                                    </div>
+                                </div>
+                                <input type="time" id="sessionEndTime" class="modern-input px-3 py-2 text-sm" value="17:00" disabled>
+                            </div>
+                        </div>
+
+                        <!-- Weekly Review -->
+                        <div class="checklist-item p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="modern-checkbox" id="weeklyReviewCheck"></div>
+                                    <div>
+                                        <h4 class="text-sm font-600 text-white" data-lang-key="weekly-review">WEEKLY REVIEW</h4>
+                                        <p class="text-xs text-purple-300" data-lang-key="weekly-review-desc">EVERY SUNDAY</p>
+                                    </div>
+                                </div>
+                                <input type="time" id="weeklyReviewTime" class="modern-input px-3 py-2 text-sm" value="20:00" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Reminders -->
+                <div class="modern-card p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-700 glow-text" data-lang-key="custom-reminders">⏰ CUSTOM REMINDERS</h3>
+                        <button id="addCustomReminder" class="pill-button px-4 py-2 text-sm font-600" data-lang-key="add-reminder">
+                            ➕ ADD
+                        </button>
+                    </div>
+                    
+                    <div id="customRemindersList" class="space-y-3">
+                        <p class="text-center py-6 text-purple-300 text-sm font-400" data-lang-key="no-custom-reminders">NO CUSTOM REMINDERS</p>
+                    </div>
+                </div>
+
+                <!-- Test Notification -->
+                <div class="text-center">
+                    <button id="testNotification" class="pill-button w-full py-4 text-lg font-700" data-lang-key="test-notification">
+                        🔔 TEST NOTIFICATION
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Statistics Page -->
         <div id="statsPage" class="hidden">
             <div class="modern-card p-6 mb-6 fade-in">
@@ -943,6 +1097,52 @@
             </div>
         </div>
 
+        <!-- Custom Reminder Modal -->
+        <div id="customReminderModal" class="modal-backdrop fixed top-0 left-0 w-full h-full flex items-center justify-center hidden z-50">
+            <div class="modern-card p-6 soft-glow" style="max-width: 500px; width: 90%;">
+                <div class="mb-6">
+                    <h3 id="customReminderModalTitle" class="text-lg font-700 glow-text" data-lang-key="add-custom-reminder">⏰ ADD CUSTOM REMINDER</h3>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-600 text-white block mb-2" data-lang-key="reminder-title">REMINDER TITLE:</label>
+                        <input type="text" id="customReminderTitle" class="modern-input w-full p-4 text-sm font-500" data-lang-key="reminder-title-placeholder" placeholder="e.g., CHECK NEWS">
+                    </div>
+                    
+                    <div>
+                        <label class="text-sm font-600 text-white block mb-2" data-lang-key="reminder-time">TIME:</label>
+                        <input type="time" id="customReminderTime" class="modern-input w-full p-4 text-sm font-500">
+                    </div>
+                    
+                    <div>
+                        <label class="text-sm font-600 text-white block mb-2" data-lang-key="reminder-days">REPEAT DAYS:</label>
+                        <div class="grid grid-cols-7 gap-2">
+                            <button type="button" class="day-btn modern-input p-3 text-center text-xs hover:bg-purple-600/30" data-day="0">SUN</button>
+                            <button type="button" class="day-btn modern-input p-3 text-center text-xs hover:bg-purple-600/30" data-day="1">MON</button>
+                            <button type="button" class="day-btn modern-input p-3 text-center text-xs hover:bg-purple-600/30" data-day="2">TUE</button>
+                            <button type="button" class="day-btn modern-input p-3 text-center text-xs hover:bg-purple-600/30" data-day="3">WED</button>
+                            <button type="button" class="day-btn modern-input p-3 text-center text-xs hover:bg-purple-600/30" data-day="4">THU</button>
+                            <button type="button" class="day-btn modern-input p-3 text-center text-xs hover:bg-purple-600/30" data-day="5">FRI</button>
+                            <button type="button" class="day-btn modern-input p-3 text-center text-xs hover:bg-purple-600/30" data-day="6">SAT</button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="text-sm font-600 text-white block mb-2" data-lang-key="reminder-message">MESSAGE (OPTIONAL):</label>
+                        <textarea id="customReminderMessage" class="modern-input w-full p-4 text-sm font-500" rows="3" data-lang-key="reminder-message-placeholder" placeholder="CUSTOM MESSAGE..."></textarea>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button id="saveCustomReminder" class="pill-button flex-1 py-3 text-sm font-600" data-lang-key="save">
+                        💾 SAVE
+                    </button>
+                    <button id="cancelCustomReminder" class="language-toggle flex-1 py-3 text-sm font-600 rounded-full" data-lang-key="cancel">
+                        ❌ CANCEL
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Full Screen Image Modal -->
         <div id="fullScreenModal" class="modal-backdrop fixed top-0 left-0 w-full h-full flex items-center justify-center hidden z-60">
             <div class="relative w-full h-full flex items-center justify-center p-4">
@@ -1117,6 +1317,42 @@
                 'delete-image': '🗑️',
                 'image-source': 'IMAGE SOURCE:',
                 'image-file-help': 'SELECT IMAGE FROM YOUR DEVICE',
+                'tab-notifications': 'NOTIFY',
+                'notifications-title': '🔔 NOTIFICATIONS',
+                'notification-permission': 'NOTIFICATION PERMISSION',
+                'permission-denied': 'DENIED',
+                'permission-granted': 'GRANTED',
+                'enable-notifications': '🔔 ENABLE',
+                'daily-reminders': '📅 DAILY REMINDERS',
+                'market-open': 'MARKET OPEN',
+                'market-open-desc': 'REMIND WHEN MARKET OPENS',
+                'analysis-time': 'ANALYSIS TIME',
+                'analysis-desc': 'DAILY MARKET ANALYSIS',
+                'session-end': 'SESSION END',
+                'session-end-desc': 'STOP TRADING REMINDER',
+                'weekly-review': 'WEEKLY REVIEW',
+                'weekly-review-desc': 'EVERY SUNDAY',
+                'custom-reminders': '⏰ CUSTOM REMINDERS',
+                'add-reminder': '➕ ADD',
+                'no-custom-reminders': 'NO CUSTOM REMINDERS',
+                'test-notification': '🔔 TEST NOTIFICATION',
+                'add-custom-reminder': '⏰ ADD CUSTOM REMINDER',
+                'reminder-title': 'REMINDER TITLE:',
+                'reminder-title-placeholder': 'e.g., CHECK NEWS',
+                'reminder-time': 'TIME:',
+                'reminder-days': 'REPEAT DAYS:',
+                'reminder-message': 'MESSAGE (OPTIONAL):',
+                'reminder-message-placeholder': 'CUSTOM MESSAGE...',
+                'market-sessions': '🌏 MARKET SESSIONS',
+                'asian-session': '🌅 ASIAN SESSION',
+                'asian-session-desc': 'TOKYO MARKET • CALM TRENDS',
+                'asian-session-info': '05:00-12:00 • Perfect for calm trading & clear trends',
+                'london-session': '🇬🇧 LONDON SESSION',
+                'london-session-desc': 'EUROPE MARKET • BEGINNER FRIENDLY',
+                'london-session-info': '14:00-22:00 • EUR/USD, GBP/USD • Easy trends for beginners',
+                'ny-session': '🗽 NEW YORK SESSION',
+                'ny-session-desc': 'US MARKET • HIGH VOLATILITY',
+                'ny-session-info': '19:00-03:00 • USD pairs • High volatility & news impact',
                 'create-preset-title': '📋 CREATE NEW PRESET',
                 'edit-preset-title': '✏️ EDIT PRESET',
                 'preset-name-label': 'PRESET NAME:',
@@ -1252,7 +1488,43 @@
                 'edit-image': '✏️',
                 'delete-image': '🗑️',
                 'image-source': 'แหล่งรูปภาพ:',
-                'image-file-help': 'เลือกรูปภาพจากเครื่องของคุณ'
+                'image-file-help': 'เลือกรูปภาพจากเครื่องของคุณ',
+                'tab-notifications': 'แจ้งเตือน',
+                'notifications-title': '🔔 การแจ้งเตือน',
+                'notification-permission': 'สิทธิ์การแจ้งเตือน',
+                'permission-denied': 'ปฏิเสธ',
+                'permission-granted': 'อนุญาต',
+                'enable-notifications': '🔔 เปิดใช้',
+                'daily-reminders': '📅 การแจ้งเตือนรายวัน',
+                'market-open': 'ตลาดเปิด',
+                'market-open-desc': 'แจ้งเตือนเมื่อตลาดเปิด',
+                'analysis-time': 'เวลาวิเคราะห์',
+                'analysis-desc': 'วิเคราะห์ตลาดรายวัน',
+                'session-end': 'สิ้นสุดเซสชั่น',
+                'session-end-desc': 'แจ้งเตือนหยุดเทรด',
+                'weekly-review': 'รีวิวรายสัปดาห์',
+                'weekly-review-desc': 'ทุกวันอาทิตย์',
+                'custom-reminders': '⏰ การแจ้งเตือนกำหนดเอง',
+                'add-reminder': '➕ เพิ่ม',
+                'no-custom-reminders': 'ไม่มีการแจ้งเตือนกำหนดเอง',
+                'test-notification': '🔔 ทดสอบการแจ้งเตือน',
+                'add-custom-reminder': '⏰ เพิ่มการแจ้งเตือนกำหนดเอง',
+                'reminder-title': 'ชื่อการแจ้งเตือน:',
+                'reminder-title-placeholder': 'เช่น ตรวจสอบข่าว',
+                'reminder-time': 'เวลา:',
+                'reminder-days': 'วันที่ทำซ้ำ:',
+                'reminder-message': 'ข้อความ (ไม่บังคับ):',
+                'reminder-message-placeholder': 'ข้อความกำหนดเอง...',
+                'market-sessions': '🌏 เซสชั่นตลาด',
+                'asian-session': '🌅 เซสชั่นเอเชีย',
+                'asian-session-desc': 'ตลาดโตเกียว • เทรนด์นิ่ง',
+                'asian-session-info': '05:00-12:00 • เหมาะสำหรับเทรดนิ่งๆ และเทรนด์ชัดเจน',
+                'london-session': '🇬🇧 เซสชั่นลอนดอน',
+                'london-session-desc': 'ตลาดยุโรป • เหมาะมือใหม่',
+                'london-session-info': '14:00-22:00 • EUR/USD, GBP/USD • เทรนด์ง่ายสำหรับมือใหม่',
+                'ny-session': '🗽 เซสชั่นนิวยอร์ก',
+                'ny-session-desc': 'ตลาดสหรัฐ • ความผันผวนสูง',
+                'ny-session-info': '19:00-03:00 • คู่เงิน USD • ความผันผวนสูงและผลกระทบข่าว'
             }
         };
         
@@ -1361,6 +1633,10 @@
         let currentEditingCategoryId = null;
         let currentEditingImageId = null;
         let currentCategoryId = null;
+        let notificationSettings = JSON.parse(localStorage.getItem('notificationSettings') || '{}');
+        let customReminders = JSON.parse(localStorage.getItem('customReminders') || '[]');
+        let notificationIntervals = {};
+        let currentEditingReminderId = null;
 
         // Default presets if none exist
         if (checklistPresets.length === 0) {
@@ -1425,6 +1701,10 @@
             switchPage('techniques');
         });
 
+        document.getElementById('notificationsTab').addEventListener('click', () => {
+            switchPage('notifications');
+        });
+
         // Next page button
         document.getElementById('nextToCalculator').addEventListener('click', () => {
             if (checkDailyLimit()) return;
@@ -1435,7 +1715,7 @@
             currentPage = page;
             
             // Update navigation
-            document.querySelectorAll('#checklistTab, #calculatorTab, #recordsTab, #statsTab, #techniquesTab').forEach(btn => {
+            document.querySelectorAll('#checklistTab, #calculatorTab, #recordsTab, #statsTab, #techniquesTab, #notificationsTab').forEach(btn => {
                 btn.className = 'tab-inactive px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
             });
             
@@ -1445,6 +1725,7 @@
             document.getElementById('recordsPage').classList.add('hidden');
             document.getElementById('statsPage').classList.add('hidden');
             document.getElementById('techniquesPage').classList.add('hidden');
+            document.getElementById('notificationsPage').classList.add('hidden');
             
             if (page === 'checklist') {
                 document.getElementById('checklistTab').className = 'tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
@@ -1465,6 +1746,10 @@
                 document.getElementById('techniquesTab').className = 'tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
                 document.getElementById('techniquesPage').classList.remove('hidden');
                 loadTechniques();
+            } else if (page === 'notifications') {
+                document.getElementById('notificationsTab').className = 'tab-active px-4 py-3 text-xs font-600 flex-shrink-0 min-w-[80px]';
+                document.getElementById('notificationsPage').classList.remove('hidden');
+                loadNotifications();
             }
         }
 
@@ -1811,7 +2096,27 @@
                 microLots: accountCurrency === 'CENT' ? microLots : null
             };
 
+            // Tips and Warnings Section - Right after title
+            let tipsHTML = `
+                <div class="space-y-3 mb-4">
+                    <div class="success-glow modern-card p-4">
+                        <p class="text-sm font-600 text-white" data-lang-key="tip-message">💡 TIP: SET TP AT 1:2 RATIO OR HIGHER</p>
+                    </div>
+            `;
+
+            if (riskPercent > 30) {
+                tipsHTML += `
+                    <div class="danger-glow modern-card p-4">
+                        <p class="text-sm font-700 text-white" data-lang-key="warning-high-risk">⚠️ WARNING: RISK TOO HIGH!</p>
+                    </div>
+                `;
+            }
+            
+            tipsHTML += `</div>`;
+
             let resultHTML = `
+                ${tipsHTML}
+                
                 <div class="modern-card p-4 mb-4" style="background: rgba(139, 92, 246, 0.1);">
                     <h4 class="text-sm font-700 text-white mb-3" data-lang-key="forex-results">📈 FOREX RESULTS</h4>
                     <p class="text-sm text-white mb-2"><strong data-lang-key="pair">PAIR:</strong> ${currencyPair}</p>
@@ -1841,19 +2146,7 @@
                         <span class="text-sm font-700 text-red-400">${riskAmount.toFixed(2)} ${accountCurrency}</span>
                     </div>
                 </div>
-                
-                <div class="success-glow modern-card p-4 mb-4">
-                    <p class="text-sm font-600 text-white" data-lang-key="tip-message">💡 TIP: SET TP AT 1:2 RATIO OR HIGHER</p>
-                </div>
             `;
-
-            if (riskPercent > 30) {
-                resultHTML += `
-                    <div class="danger-glow modern-card p-4">
-                        <p class="text-sm font-700 text-white" data-lang-key="warning-high-risk">⚠️ WARNING: RISK TOO HIGH!</p>
-                    </div>
-                `;
-            }
 
             document.getElementById('resultContent').innerHTML = resultHTML;
             document.getElementById('results').classList.remove('hidden');
@@ -1901,7 +2194,27 @@
                 margin
             };
 
+            // Tips and Warnings Section - Right after title
+            let tipsHTML = `
+                <div class="space-y-3 mb-4">
+                    <div class="success-glow modern-card p-4">
+                        <p class="text-sm font-600 text-white" data-lang-key="tip-message">💡 TIP: SET TP AT 1:2 RATIO OR HIGHER</p>
+                    </div>
+            `;
+
+            if (riskPercent > 30) {
+                tipsHTML += `
+                    <div class="danger-glow modern-card p-4">
+                        <p class="text-sm font-700 text-white" data-lang-key="warning-high-risk">⚠️ WARNING: RISK TOO HIGH!</p>
+                    </div>
+                `;
+            }
+            
+            tipsHTML += `</div>`;
+
             let resultHTML = `
+                ${tipsHTML}
+                
                 <div class="modern-card p-4 mb-4" style="background: rgba(245, 158, 11, 0.1);">
                     <h4 class="text-sm font-700 text-white mb-3" data-lang-key="crypto-results">₿ CRYPTO RESULTS</h4>
                     <p class="text-sm text-white mb-2"><strong data-lang-key="coin">COIN:</strong> ${cryptoCoin}</p>
@@ -1920,19 +2233,7 @@
                         <span class="text-sm font-700 text-red-400">${riskAmount.toFixed(2)} USDT</span>
                     </div>
                 </div>
-                
-                <div class="success-glow modern-card p-4 mb-4">
-                    <p class="text-sm font-600 text-white" data-lang-key="tip-message">💡 TIP: SET TP AT 1:2 RATIO OR HIGHER</p>
-                </div>
             `;
-
-            if (riskPercent > 30) {
-                resultHTML += `
-                    <div class="danger-glow modern-card p-4">
-                        <p class="text-sm font-700 text-white" data-lang-key="warning-high-risk">⚠️ WARNING: RISK TOO HIGH!</p>
-                    </div>
-                `;
-            }
 
             document.getElementById('resultContent').innerHTML = resultHTML;
             document.getElementById('results').classList.remove('hidden');
@@ -1951,12 +2252,54 @@
         }
 
         // Save confirmation handlers
-        document.getElementById('confirmSave').addEventListener('click', () => {
-            if (currentCalculationData) {
+        document.getElementById('confirmSave').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Save button clicked', currentCalculationData); // Debug log
+            
+            if (!currentCalculationData) {
+                alert('NO DATA TO SAVE');
+                return;
+            }
+            
+            try {
+                // Check if risk is high (over 30%)
+                const riskPercent = currentCalculationData.riskPercent || currentCalculationData.cryptoRiskPercent;
+                
+                if (riskPercent > 30) {
+                    showHighRiskWarning(riskPercent);
+                    return;
+                }
+                
+                // Proceed with normal save
+                saveTradeData();
+            } catch (error) {
+                console.error('Error saving data:', error);
+                alert('ERROR SAVING DATA');
+            }
+        });
+
+        // High risk warning popup
+        function showHighRiskWarning(riskPercent) {
+            const warningMessage = currentLanguage === 'en' ? 
+                `⚠️ HIGH RISK WARNING!\n\nYou are using ${riskPercent}% risk per trade.\nThis is considered very high risk.\n\nAre you sure you want to save this data?` :
+                `⚠️ คำเตือนความเสี่ยงสูง!\n\nคุณกำลังใช้ความเสี่ยง ${riskPercent}% ต่อการเทรด\nถือว่าเป็นความเสี่ยงที่สูงมาก\n\nคุณแน่ใจหรือไม่ที่จะบันทึกข้อมูลนี้?`;
+            
+            if (confirm(warningMessage)) {
+                saveTradeData();
+            }
+        }
+
+        // Extract save logic to separate function
+        function saveTradeData() {
+            console.log('saveTradeData called'); // Debug log
+            
+            try {
                 // Check checklist status
                 let checklistStatus = null;
                 let checklistProgress = null;
-                
+                    
                 if (activePresetId) {
                     const preset = checklistPresets.find(p => p.id === activePresetId);
                     if (preset) {
@@ -1983,8 +2326,12 @@
                     presetId: activePresetId
                 };
                 
+                console.log('Record to save:', record); // Debug log
+                
                 tradingRecords.push(record);
                 localStorage.setItem('tradingRecords', JSON.stringify(tradingRecords));
+                
+                console.log('Record saved to localStorage'); // Debug log
                 
                 // Reset checklist after saving
                 if (activePresetId) {
@@ -1997,9 +2344,16 @@
                 document.getElementById('saveConfirmation').classList.add('hidden');
                 document.getElementById('results').classList.add('hidden');
                 
-                alert('DATA SAVED! CHECKLIST RESET!');
+                const successMessage = currentLanguage === 'en' ? 'DATA SAVED! CHECKLIST RESET!' : 'บันทึกข้อมูลแล้ว! รีเซ็ตเช็คลิสต์แล้ว!';
+                alert(successMessage);
+                
+                console.log('Save completed successfully'); // Debug log
+                
+            } catch (error) {
+                console.error('Error in saveTradeData:', error);
+                alert('ERROR SAVING DATA: ' + error.message);
             }
-        });
+        }
 
         document.getElementById('cancelSave').addEventListener('click', () => {
             // Hide save confirmation and results
@@ -3295,11 +3649,413 @@
             }
         });
 
+        // Notification System
+        function loadNotifications() {
+            checkNotificationPermission();
+            loadDailyReminders();
+            loadCustomReminders();
+            setupNotificationScheduler();
+        }
+
+        function checkNotificationPermission() {
+            const permissionText = document.getElementById('permissionText');
+            const enableBtn = document.getElementById('enableNotifications');
+            
+            if (!('Notification' in window)) {
+                permissionText.textContent = 'NOT SUPPORTED';
+                permissionText.className = 'text-xs text-red-400';
+                enableBtn.disabled = true;
+                enableBtn.classList.add('opacity-50');
+                return;
+            }
+            
+            if (Notification.permission === 'granted') {
+                permissionText.setAttribute('data-lang-key', 'permission-granted');
+                permissionText.className = 'text-xs text-green-400';
+                enableBtn.style.display = 'none';
+            } else {
+                permissionText.setAttribute('data-lang-key', 'permission-denied');
+                permissionText.className = 'text-xs text-red-400';
+                enableBtn.style.display = 'block';
+            }
+            
+            updateLanguage();
+        }
+
+        function loadDailyReminders() {
+            const reminders = [
+                { id: 'asianSession', checkId: 'asianSessionCheck', timeId: 'asianSessionTime' },
+                { id: 'londonSession', checkId: 'londonSessionCheck', timeId: 'londonSessionTime' },
+                { id: 'nySession', checkId: 'nySessionCheck', timeId: 'nySessionTime' },
+                { id: 'analysis', checkId: 'analysisCheck', timeId: 'analysisTime' },
+                { id: 'sessionEnd', checkId: 'sessionEndCheck', timeId: 'sessionEndTime' },
+                { id: 'weeklyReview', checkId: 'weeklyReviewCheck', timeId: 'weeklyReviewTime' }
+            ];
+            
+            reminders.forEach(reminder => {
+                const checkbox = document.getElementById(reminder.checkId);
+                const timeInput = document.getElementById(reminder.timeId);
+                const isEnabled = notificationSettings[reminder.id]?.enabled || false;
+                const time = notificationSettings[reminder.id]?.time || timeInput.value;
+                
+                // Set checkbox state
+                if (isEnabled) {
+                    checkbox.classList.add('checked');
+                    timeInput.disabled = false;
+                    timeInput.classList.remove('opacity-50');
+                } else {
+                    checkbox.classList.remove('checked');
+                    timeInput.disabled = true;
+                    timeInput.classList.add('opacity-50');
+                }
+                
+                timeInput.value = time;
+                
+                // Add click handler
+                checkbox.onclick = () => toggleDailyReminder(reminder.id, reminder.checkId, reminder.timeId);
+                timeInput.onchange = () => updateReminderTime(reminder.id, timeInput.value);
+            });
+        }
+
+        function toggleDailyReminder(reminderId, checkId, timeId) {
+            const checkbox = document.getElementById(checkId);
+            const timeInput = document.getElementById(timeId);
+            const isEnabled = checkbox.classList.contains('checked');
+            
+            if (Notification.permission !== 'granted') {
+                alert(currentLanguage === 'en' ? 'ENABLE NOTIFICATIONS FIRST' : 'เปิดการแจ้งเตือนก่อน');
+                return;
+            }
+            
+            if (isEnabled) {
+                // Disable
+                checkbox.classList.remove('checked');
+                timeInput.disabled = true;
+                timeInput.classList.add('opacity-50');
+                notificationSettings[reminderId] = { enabled: false, time: timeInput.value };
+            } else {
+                // Enable
+                checkbox.classList.add('checked');
+                timeInput.disabled = false;
+                timeInput.classList.remove('opacity-50');
+                notificationSettings[reminderId] = { enabled: true, time: timeInput.value };
+            }
+            
+            localStorage.setItem('notificationSettings', JSON.stringify(notificationSettings));
+            setupNotificationScheduler();
+        }
+
+        function updateReminderTime(reminderId, time) {
+            if (notificationSettings[reminderId]) {
+                notificationSettings[reminderId].time = time;
+                localStorage.setItem('notificationSettings', JSON.stringify(notificationSettings));
+                setupNotificationScheduler();
+            }
+        }
+
+        function loadCustomReminders() {
+            const remindersList = document.getElementById('customRemindersList');
+            
+            if (customReminders.length === 0) {
+                remindersList.innerHTML = '<p class="text-center py-6 text-purple-300 text-sm font-400" data-lang-key="no-custom-reminders">NO CUSTOM REMINDERS</p>';
+                updateLanguage();
+                return;
+            }
+            
+            const remindersHTML = customReminders.map(reminder => {
+                const daysText = reminder.days.map(day => {
+                    const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                    return dayNames[day];
+                }).join(', ');
+                
+                return `
+                    <div class="checklist-item p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="modern-checkbox ${reminder.enabled ? 'checked' : ''}" onclick="toggleCustomReminder(${reminder.id})"></div>
+                                <div>
+                                    <h4 class="text-sm font-600 text-white">${reminder.title}</h4>
+                                    <p class="text-xs text-purple-300">${reminder.time} • ${daysText}</p>
+                                    ${reminder.message ? `<p class="text-xs text-purple-300 mt-1">${reminder.message}</p>` : ''}
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="editCustomReminder(${reminder.id})" class="language-toggle px-2 py-1 text-xs">✏️</button>
+                                <button onclick="deleteCustomReminder(${reminder.id})" class="danger-glow px-2 py-1 text-xs rounded">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            remindersList.innerHTML = remindersHTML;
+        }
+
+        function toggleCustomReminder(reminderId) {
+            if (Notification.permission !== 'granted') {
+                alert(currentLanguage === 'en' ? 'ENABLE NOTIFICATIONS FIRST' : 'เปิดการแจ้งเตือนก่อน');
+                return;
+            }
+            
+            const reminderIndex = customReminders.findIndex(r => r.id === reminderId);
+            if (reminderIndex !== -1) {
+                customReminders[reminderIndex].enabled = !customReminders[reminderIndex].enabled;
+                localStorage.setItem('customReminders', JSON.stringify(customReminders));
+                loadCustomReminders();
+                setupNotificationScheduler();
+            }
+        }
+
+        function setupNotificationScheduler() {
+            // Clear existing intervals
+            Object.values(notificationIntervals).forEach(interval => clearInterval(interval));
+            notificationIntervals = {};
+            
+            if (Notification.permission !== 'granted') return;
+            
+            // Schedule daily reminders
+            Object.keys(notificationSettings).forEach(reminderId => {
+                const setting = notificationSettings[reminderId];
+                if (setting.enabled) {
+                    scheduleNotification(reminderId, setting.time, getDailyReminderMessage(reminderId));
+                }
+            });
+            
+            // Schedule custom reminders
+            customReminders.forEach(reminder => {
+                if (reminder.enabled) {
+                    scheduleCustomNotification(reminder);
+                }
+            });
+        }
+
+        function scheduleNotification(id, time, message) {
+            const [hours, minutes] = time.split(':').map(Number);
+            
+            const checkTime = () => {
+                const now = new Date();
+                if (now.getHours() === hours && now.getMinutes() === minutes) {
+                    showNotification('HOPEYA TRADING', message);
+                }
+            };
+            
+            // Check every minute
+            notificationIntervals[id] = setInterval(checkTime, 60000);
+        }
+
+        function scheduleCustomNotification(reminder) {
+            const [hours, minutes] = reminder.time.split(':').map(Number);
+            
+            const checkTime = () => {
+                const now = new Date();
+                const currentDay = now.getDay();
+                
+                if (reminder.days.includes(currentDay) && 
+                    now.getHours() === hours && 
+                    now.getMinutes() === minutes) {
+                    showNotification(reminder.title, reminder.message || '');
+                }
+            };
+            
+            notificationIntervals[`custom_${reminder.id}`] = setInterval(checkTime, 60000);
+        }
+
+        function getDailyReminderMessage(reminderId) {
+            const messages = {
+                en: {
+                    asianSession: '🌅 Asian Session Opening! Tokyo market is active. Perfect for calm trading & clear trends.',
+                    londonSession: '🇬🇧 London Session Opening! European market is active. Great for beginners - EUR/USD, GBP/USD trends are clear.',
+                    nySession: '🗽 New York Session Opening! US market is active. High volatility expected - USD pairs will be active!',
+                    analysis: '🔍 Time for daily market analysis!',
+                    sessionEnd: '⏰ Trading session ending. Review your trades.',
+                    weeklyReview: '📊 Weekly review time! Check your performance.'
+                },
+                th: {
+                    asianSession: '🌅 เซสชั่นเอเชียเปิดแล้ว! ตลาดโตเกียวเริ่มทำงาน เหมาะสำหรับเทรดนิ่งๆ และเทรนด์ชัดเจน',
+                    londonSession: '🇬🇧 เซสชั่นลอนดอนเปิดแล้ว! ตลาดยุโรปเริ่มทำงาน เหมาะสำหรับมือใหม่ - EUR/USD, GBP/USD เทรนด์ชัดเจน',
+                    nySession: '🗽 เซสชั่นนิวยอร์กเปิดแล้ว! ตลาดสหรัฐเริ่มทำงาน ความผันผวนสูง - คู่เงิน USD จะเคลื่อนไหวมาก!',
+                    analysis: '🔍 เวลาวิเคราะห์ตลาดรายวัน!',
+                    sessionEnd: '⏰ เซสชั่นการเทรดกำลังสิ้นสุด ตรวจสอบการเทรดของคุณ',
+                    weeklyReview: '📊 เวลารีวิวรายสัปดาห์! ตรวจสอบผลงานของคุณ'
+                }
+            };
+            
+            return messages[currentLanguage][reminderId] || messages.en[reminderId];
+        }
+
+        function showNotification(title, body) {
+            if (Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiM4QjVDRjYiLz4KPHRleHQgeD0iMzIiIHk9IjQwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0Ij7wn5OQPC90ZXh0Pgo8L3N2Zz4K',
+                    badge: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiM4QjVDRjYiLz4KPHRleHQgeD0iMzIiIHk9IjQwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0Ij7wn5OQPC90ZXh0Pgo8L3N2Zz4K'
+                });
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('enableNotifications').addEventListener('click', async () => {
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    checkNotificationPermission();
+                    alert(currentLanguage === 'en' ? 'NOTIFICATIONS ENABLED!' : 'เปิดการแจ้งเตือนแล้ว!');
+                } else {
+                    alert(currentLanguage === 'en' ? 'NOTIFICATIONS DENIED' : 'ปฏิเสธการแจ้งเตือน');
+                }
+            } catch (error) {
+                console.error('Error requesting notification permission:', error);
+            }
+        });
+
+        document.getElementById('testNotification').addEventListener('click', () => {
+            if (Notification.permission === 'granted') {
+                showNotification('HOPEYA TRADING', currentLanguage === 'en' ? 'Test notification working!' : 'การแจ้งเตือนทำงานได้!');
+            } else {
+                alert(currentLanguage === 'en' ? 'ENABLE NOTIFICATIONS FIRST' : 'เปิดการแจ้งเตือนก่อน');
+            }
+        });
+
+        document.getElementById('addCustomReminder').addEventListener('click', () => {
+            if (Notification.permission !== 'granted') {
+                alert(currentLanguage === 'en' ? 'ENABLE NOTIFICATIONS FIRST' : 'เปิดการแจ้งเตือนก่อน');
+                return;
+            }
+            openCustomReminderModal();
+        });
+
+        function openCustomReminderModal(reminder = null) {
+            const modal = document.getElementById('customReminderModal');
+            const title = document.getElementById('customReminderModalTitle');
+            const titleInput = document.getElementById('customReminderTitle');
+            const timeInput = document.getElementById('customReminderTime');
+            const messageInput = document.getElementById('customReminderMessage');
+            
+            if (reminder) {
+                title.textContent = currentLanguage === 'en' ? '✏️ EDIT REMINDER' : '✏️ แก้ไขการแจ้งเตือน';
+                titleInput.value = reminder.title;
+                timeInput.value = reminder.time;
+                messageInput.value = reminder.message || '';
+                
+                // Set selected days
+                document.querySelectorAll('.day-btn').forEach(btn => {
+                    const day = parseInt(btn.getAttribute('data-day'));
+                    if (reminder.days.includes(day)) {
+                        btn.classList.remove('modern-input');
+                        btn.classList.add('pill-button');
+                    } else {
+                        btn.classList.remove('pill-button');
+                        btn.classList.add('modern-input');
+                    }
+                });
+                
+                currentEditingReminderId = reminder.id;
+            } else {
+                title.setAttribute('data-lang-key', 'add-custom-reminder');
+                titleInput.value = '';
+                timeInput.value = '';
+                messageInput.value = '';
+                
+                // Reset day selection
+                document.querySelectorAll('.day-btn').forEach(btn => {
+                    btn.classList.remove('pill-button');
+                    btn.classList.add('modern-input');
+                });
+                
+                currentEditingReminderId = null;
+            }
+            
+            modal.classList.remove('hidden');
+            updateLanguage();
+        }
+
+        // Day selection for custom reminders
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.classList.contains('pill-button')) {
+                    btn.classList.remove('pill-button');
+                    btn.classList.add('modern-input');
+                } else {
+                    btn.classList.remove('modern-input');
+                    btn.classList.add('pill-button');
+                }
+            });
+        });
+
+        document.getElementById('saveCustomReminder').addEventListener('click', () => {
+            const title = document.getElementById('customReminderTitle').value.trim();
+            const time = document.getElementById('customReminderTime').value;
+            const message = document.getElementById('customReminderMessage').value.trim();
+            
+            if (!title || !time) {
+                alert(currentLanguage === 'en' ? 'FILL TITLE AND TIME' : 'กรอกชื่อและเวลา');
+                return;
+            }
+            
+            const selectedDays = Array.from(document.querySelectorAll('.day-btn.pill-button'))
+                .map(btn => parseInt(btn.getAttribute('data-day')));
+            
+            if (selectedDays.length === 0) {
+                alert(currentLanguage === 'en' ? 'SELECT AT LEAST ONE DAY' : 'เลือกอย่างน้อยหนึ่งวัน');
+                return;
+            }
+            
+            const reminderData = {
+                id: currentEditingReminderId || Date.now(),
+                title,
+                time,
+                message,
+                days: selectedDays,
+                enabled: true
+            };
+            
+            if (currentEditingReminderId) {
+                const index = customReminders.findIndex(r => r.id === currentEditingReminderId);
+                if (index !== -1) {
+                    customReminders[index] = reminderData;
+                }
+            } else {
+                customReminders.push(reminderData);
+            }
+            
+            localStorage.setItem('customReminders', JSON.stringify(customReminders));
+            document.getElementById('customReminderModal').classList.add('hidden');
+            loadCustomReminders();
+            setupNotificationScheduler();
+            
+            alert(currentLanguage === 'en' ? 'REMINDER SAVED!' : 'บันทึกการแจ้งเตือนแล้ว!');
+        });
+
+        document.getElementById('cancelCustomReminder').addEventListener('click', () => {
+            document.getElementById('customReminderModal').classList.add('hidden');
+            currentEditingReminderId = null;
+        });
+
+        function editCustomReminder(reminderId) {
+            const reminder = customReminders.find(r => r.id === reminderId);
+            if (reminder) {
+                openCustomReminderModal(reminder);
+            }
+        }
+
+        function deleteCustomReminder(reminderId) {
+            const confirmText = currentLanguage === 'en' ? 'DELETE THIS REMINDER?' : 'ลบการแจ้งเตือนนี้?';
+            if (confirm(confirmText)) {
+                customReminders = customReminders.filter(r => r.id !== reminderId);
+                localStorage.setItem('customReminders', JSON.stringify(customReminders));
+                loadCustomReminders();
+                setupNotificationScheduler();
+                
+                const successText = currentLanguage === 'en' ? 'REMINDER DELETED!' : 'ลบการแจ้งเตือนแล้ว!';
+                alert(successText);
+            }
+        }
+
         // Initialize language
         updateLanguage();
         
         // Start with checklist page
         switchPage('checklist');
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962f8f00700e45c5',t:'MTc1MzE1MTg3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9637f4d1d1c34ba7',t:'MTc1MzIzOTkyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
