@@ -785,6 +785,40 @@
                     </div>
                 </div>
 
+                <!-- Mobile Troubleshooting Guide -->
+                <div id="mobileTroubleshooting" class="modern-card p-4 mb-6" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3);">
+                    <h3 class="text-sm font-700 text-white mb-3">📱 MOBILE TROUBLESHOOTING</h3>
+                    
+                    <div class="space-y-3 text-xs text-orange-200">
+                        <div>
+                            <h4 class="font-600 text-white mb-1">🤖 ANDROID CHROME:</h4>
+                            <p>1. Tap ⋮ (menu) → Settings</p>
+                            <p>2. Site Settings → Notifications</p>
+                            <p>3. Find this website → Allow</p>
+                            <p>4. Refresh page</p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-600 text-white mb-1">🍎 iOS SAFARI:</h4>
+                            <p>1. iPhone Settings → Safari</p>
+                            <p>2. Advanced → Website Data</p>
+                            <p>3. Or try Chrome browser instead</p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-600 text-white mb-1">🔧 COMMON ISSUES:</h4>
+                            <p>• Some mobile browsers don't support notifications</p>
+                            <p>• Try Chrome or Firefox on mobile</p>
+                            <p>• Check if "Do Not Disturb" is enabled</p>
+                            <p>• Clear browser cache and try again</p>
+                        </div>
+                        
+                        <div class="bg-orange-900/20 p-3 rounded-lg mt-3">
+                            <p class="font-600 text-orange-300">💡 TIP: If notifications still don't work, try using the app on desktop/laptop for full notification support.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Market Sessions -->
                 <div class="modern-card p-6 mb-6">
                     <h3 class="text-lg font-700 glow-text mb-4" data-lang-key="market-sessions">🌏 MARKET SESSIONS</h3>
@@ -3666,6 +3700,7 @@
             const permissionText = document.getElementById('permissionText');
             const enableBtn = document.getElementById('enableNotifications');
             
+            // Check if notifications are supported
             if (!('Notification' in window)) {
                 permissionText.textContent = 'NOT SUPPORTED';
                 permissionText.className = 'text-xs text-red-400';
@@ -3674,28 +3709,78 @@
                 return;
             }
             
-            console.log('Current notification permission:', Notification.permission); // Debug log
+            // Check if service worker is supported (required for mobile)
+            const isServiceWorkerSupported = 'serviceWorker' in navigator;
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            console.log('Permission:', Notification.permission, 'Mobile:', isMobile, 'SW:', isServiceWorkerSupported);
             
             if (Notification.permission === 'granted') {
                 permissionText.setAttribute('data-lang-key', 'permission-granted');
                 permissionText.textContent = currentLanguage === 'en' ? 'GRANTED' : 'อนุญาต';
                 permissionText.className = 'text-xs text-green-400';
                 enableBtn.style.display = 'none';
+                
+                // Enable notification controls
+                enableNotificationControls(true);
             } else if (Notification.permission === 'denied') {
                 permissionText.setAttribute('data-lang-key', 'permission-denied');
-                permissionText.textContent = currentLanguage === 'en' ? 'DENIED - CHECK BROWSER SETTINGS' : 'ปฏิเสธ - ตรวจสอบการตั้งค่าเบราว์เซอร์';
+                permissionText.textContent = currentLanguage === 'en' ? 'DENIED' : 'ปฏิเสธ';
                 permissionText.className = 'text-xs text-red-400';
                 enableBtn.textContent = currentLanguage === 'en' ? '⚙️ BROWSER SETTINGS' : '⚙️ ตั้งค่าเบราว์เซอร์';
                 enableBtn.style.display = 'block';
+                
+                // Disable notification controls
+                enableNotificationControls(false);
             } else {
                 permissionText.setAttribute('data-lang-key', 'permission-denied');
                 permissionText.textContent = currentLanguage === 'en' ? 'NOT ENABLED' : 'ยังไม่เปิดใช้';
                 permissionText.className = 'text-xs text-orange-400';
                 enableBtn.textContent = currentLanguage === 'en' ? '🔔 ENABLE' : '🔔 เปิดใช้';
                 enableBtn.style.display = 'block';
+                
+                // Disable notification controls
+                enableNotificationControls(false);
             }
             
             updateLanguage();
+        }
+        
+        function enableNotificationControls(enabled) {
+            // Enable/disable all notification checkboxes and time inputs
+            const checkboxes = document.querySelectorAll('#notificationsPage .modern-checkbox');
+            const timeInputs = document.querySelectorAll('#notificationsPage input[type="time"]');
+            
+            checkboxes.forEach(checkbox => {
+                if (enabled) {
+                    checkbox.style.pointerEvents = 'auto';
+                    checkbox.style.opacity = '1';
+                } else {
+                    checkbox.style.pointerEvents = 'none';
+                    checkbox.style.opacity = '0.5';
+                    checkbox.classList.remove('checked');
+                }
+            });
+            
+            timeInputs.forEach(input => {
+                input.disabled = !enabled;
+                if (!enabled) {
+                    input.classList.add('opacity-50');
+                } else {
+                    input.classList.remove('opacity-50');
+                }
+            });
+            
+            // Disable add custom reminder button
+            const addReminderBtn = document.getElementById('addCustomReminder');
+            if (addReminderBtn) {
+                addReminderBtn.disabled = !enabled;
+                if (!enabled) {
+                    addReminderBtn.classList.add('opacity-50');
+                } else {
+                    addReminderBtn.classList.remove('opacity-50');
+                }
+            }
         }
 
         function loadDailyReminders() {
@@ -3912,49 +3997,112 @@
         // Event Listeners
         document.getElementById('enableNotifications').addEventListener('click', async () => {
             try {
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
                 // Check current permission status
                 if (Notification.permission === 'denied') {
-                    // Show instructions for manually enabling notifications
-                    const instructions = currentLanguage === 'en' ? 
-                        `🔔 NOTIFICATION BLOCKED!\n\nTo enable notifications:\n\n1. Click the 🔒 lock icon in address bar\n2. Find "Notifications" setting\n3. Change to "Allow"\n4. Refresh this page\n\nOR\n\nGo to browser Settings > Site Settings > Notifications` :
-                        `🔔 การแจ้งเตือนถูกบล็อก!\n\nวิธีเปิดการแจ้งเตือน:\n\n1. คลิกไอคอน 🔒 ในแถบที่อยู่\n2. หาการตั้งค่า "การแจ้งเตือน"\n3. เปลี่ยนเป็น "อนุญาต"\n4. รีเฟรชหน้านี้\n\nหรือ\n\nไปที่การตั้งค่าเบราว์เซอร์ > การตั้งค่าไซต์ > การแจ้งเตือน`;
+                    // Show mobile-specific instructions
+                    const instructions = isMobile ? 
+                        (currentLanguage === 'en' ? 
+                            `🔔 NOTIFICATION BLOCKED!\n\nMOBILE INSTRUCTIONS:\n\n📱 ANDROID:\n1. Open Chrome Settings\n2. Go to Site Settings\n3. Find Notifications\n4. Find this website\n5. Change to "Allow"\n6. Refresh page\n\n🍎 iOS/iPhone:\n1. Go to iPhone Settings\n2. Find Safari/Chrome\n3. Go to Notifications\n4. Enable notifications\n5. Refresh page` :
+                            `🔔 การแจ้งเตือนถูกบล็อก!\n\nคำแนะนำสำหรับมือถือ:\n\n📱 ANDROID:\n1. เปิดการตั้งค่า Chrome\n2. ไปที่การตั้งค่าไซต์\n3. หาการแจ้งเตือน\n4. หาเว็บไซต์นี้\n5. เปลี่ยนเป็น "อนุญาต"\n6. รีเฟรชหน้า\n\n🍎 iOS/iPhone:\n1. ไปที่การตั้งค่า iPhone\n2. หา Safari/Chrome\n3. ไปที่การแจ้งเตือน\n4. เปิดการแจ้งเตือน\n5. รีเฟรชหน้า`) :
+                        (currentLanguage === 'en' ? 
+                            `🔔 NOTIFICATION BLOCKED!\n\nTo enable notifications:\n\n1. Click the 🔒 lock icon in address bar\n2. Find "Notifications" setting\n3. Change to "Allow"\n4. Refresh this page\n\nOR\n\nGo to browser Settings > Site Settings > Notifications` :
+                            `🔔 การแจ้งเตือนถูกบล็อก!\n\nวิธีเปิดการแจ้งเตือน:\n\n1. คลิกไอคอน 🔒 ในแถบที่อยู่\n2. หาการตั้งค่า "การแจ้งเตือน"\n3. เปลี่ยนเป็น "อนุญาต"\n4. รีเฟรชหน้านี้\n\nหรือ\n\nไปที่การตั้งค่าเบราว์เซอร์ > การตั้งค่าไซต์ > การแจ้งเตือน`);
                     
                     alert(instructions);
                     return;
                 }
                 
-                // Request permission
-                const permission = await Notification.requestPermission();
-                console.log('Permission result:', permission); // Debug log
+                // Show loading state
+                const enableBtn = document.getElementById('enableNotifications');
+                const originalText = enableBtn.textContent;
+                enableBtn.textContent = currentLanguage === 'en' ? '⏳ REQUESTING...' : '⏳ กำลังขอสิทธิ์...';
+                enableBtn.disabled = true;
+                
+                // Add user interaction requirement for mobile
+                if (isMobile) {
+                    // Show mobile-specific prompt
+                    const mobilePrompt = currentLanguage === 'en' ? 
+                        'MOBILE DETECTED!\n\nClick OK to request notification permission.\nYou may see a browser popup - please click "Allow".' :
+                        'ตรวจพบมือถือ!\n\nคลิก OK เพื่อขอสิทธิ์การแจ้งเตือน\nอาจมีป๊อปอัพจากเบราว์เซอร์ - กรุณาคลิก "อนุญาต"';
+                    
+                    if (!confirm(mobilePrompt)) {
+                        enableBtn.textContent = originalText;
+                        enableBtn.disabled = false;
+                        return;
+                    }
+                }
+                
+                // Request permission with timeout for mobile
+                const requestPermission = () => {
+                    return new Promise((resolve, reject) => {
+                        const timeout = setTimeout(() => {
+                            reject(new Error('Permission request timeout'));
+                        }, 10000); // 10 second timeout
+                        
+                        Notification.requestPermission().then(permission => {
+                            clearTimeout(timeout);
+                            resolve(permission);
+                        }).catch(error => {
+                            clearTimeout(timeout);
+                            reject(error);
+                        });
+                    });
+                };
+                
+                const permission = await requestPermission();
+                console.log('Permission result:', permission, 'Mobile:', isMobile);
+                
+                // Reset button state
+                enableBtn.textContent = originalText;
+                enableBtn.disabled = false;
                 
                 if (permission === 'granted') {
                     checkNotificationPermission();
                     setupNotificationScheduler();
                     
-                    // Show success message and test notification
-                    const successMsg = currentLanguage === 'en' ? 'NOTIFICATIONS ENABLED!' : 'เปิดการแจ้งเตือนแล้ว!';
+                    // Show success message
+                    const successMsg = currentLanguage === 'en' ? 
+                        'NOTIFICATIONS ENABLED!\n\nYou can now set up reminders.' : 
+                        'เปิดการแจ้งเตือนแล้ว!\n\nตอนนี้คุณสามารถตั้งการแจ้งเตือนได้แล้ว';
                     alert(successMsg);
                     
-                    // Send test notification
+                    // Send test notification after delay
                     setTimeout(() => {
-                        showNotification('HOPEYA TRADING', currentLanguage === 'en' ? 'Notifications are now working!' : 'การแจ้งเตือนทำงานแล้ว!');
-                    }, 1000);
+                        showNotification('HOPEYA TRADING', currentLanguage === 'en' ? 'Notifications are working!' : 'การแจ้งเตือนทำงานแล้ว!');
+                    }, 2000);
                     
                 } else if (permission === 'denied') {
                     checkNotificationPermission();
-                    const deniedMsg = currentLanguage === 'en' ? 
-                        'NOTIFICATIONS DENIED!\n\nPlease enable manually in browser settings.' : 
-                        'ปฏิเสธการแจ้งเตือน!\n\nกรุณาเปิดใช้ในการตั้งค่าเบราว์เซอร์';
+                    const deniedMsg = isMobile ? 
+                        (currentLanguage === 'en' ? 
+                            'NOTIFICATIONS DENIED!\n\nPlease enable manually:\n• Android: Chrome Settings > Site Settings > Notifications\n• iOS: iPhone Settings > Safari/Chrome > Notifications' : 
+                            'ปฏิเสธการแจ้งเตือน!\n\nกรุณาเปิดใช้ด้วยตนเอง:\n• Android: การตั้งค่า Chrome > การตั้งค่าไซต์ > การแจ้งเตือน\n• iOS: การตั้งค่า iPhone > Safari/Chrome > การแจ้งเตือน') :
+                        (currentLanguage === 'en' ? 
+                            'NOTIFICATIONS DENIED!\n\nPlease enable manually in browser settings.' : 
+                            'ปฏิเสธการแจ้งเตือน!\n\nกรุณาเปิดใช้ในการตั้งค่าเบราว์เซอร์');
                     alert(deniedMsg);
                 } else {
                     checkNotificationPermission();
-                    const defaultMsg = currentLanguage === 'en' ? 'NOTIFICATION PERMISSION NOT GRANTED' : 'ไม่ได้รับอนุญาตการแจ้งเตือน';
+                    const defaultMsg = currentLanguage === 'en' ? 
+                        'NOTIFICATION PERMISSION NOT GRANTED\n\nTry refreshing the page and try again.' : 
+                        'ไม่ได้รับอนุญาตการแจ้งเตือน\n\nลองรีเฟรชหน้าและลองใหม่';
                     alert(defaultMsg);
                 }
             } catch (error) {
                 console.error('Error requesting notification permission:', error);
-                const errorMsg = currentLanguage === 'en' ? 'ERROR ENABLING NOTIFICATIONS' : 'เกิดข้อผิดพลาดในการเปิดการแจ้งเตือน';
+                
+                // Reset button state
+                const enableBtn = document.getElementById('enableNotifications');
+                enableBtn.disabled = false;
+                
+                const errorMsg = currentLanguage === 'en' ? 
+                    'ERROR ENABLING NOTIFICATIONS\n\nThis might be due to:\n• Browser restrictions\n• Mobile limitations\n• Network issues\n\nTry refreshing and try again.' : 
+                    'เกิดข้อผิดพลาดในการเปิดการแจ้งเตือน\n\nอาจเกิดจาก:\n• ข้อจำกัดของเบราว์เซอร์\n• ข้อจำกัดของมือถือ\n• ปัญหาเครือข่าย\n\nลองรีเฟรชและลองใหม่';
                 alert(errorMsg);
+                
+                checkNotificationPermission();
             }
         });
 
@@ -4107,5 +4255,5 @@
         // Start with checklist page
         switchPage('checklist');
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9638232db44f1104',t:'MTc1MzI0MTgyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9638372d87cb4b94',t:'MTc1MzI0MjY0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
